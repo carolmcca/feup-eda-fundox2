@@ -5,9 +5,9 @@
 
 using namespace std;
 
-Player::Player() {
-	this->name = "";
-	this->color = "";
+Player::Player(string name, string color) {
+	this->name = name;
+	this->color = color;
 	this->score = 0;
 	this->gaveUp = false;
 }

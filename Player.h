@@ -3,8 +3,14 @@
 #include <vector>
 
 class Player {
+private:
+	std::string name;
+	std::string color;
+	int score;
+	bool gaveUp;
+
 public:
-	Player();
+	Player(std::string name, std::string color);
 	void setName(const std::string& name);
 	void setColor(const std::string& color);
 	void setScore(const int& score);
@@ -13,10 +19,4 @@ public:
 	std::string getColor() const;
 	int getScore() const;
 	bool getGaveUp() const;
-
-private:
-	std::string name;
-	std::string color;
-	int score;
-	bool gaveUp;
 };
