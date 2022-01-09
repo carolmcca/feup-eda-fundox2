@@ -61,3 +61,7 @@ bool Player::getGaveUp() const {
 }
 
 //----------------------------------------------------------
+
+void Player::incScore() {
+	this->score++;
+}

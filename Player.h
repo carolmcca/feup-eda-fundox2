@@ -19,4 +19,5 @@ public:
 	std::string getColor() const;
 	int getScore() const;
 	bool getGaveUp() const;
+	void incScore();
 };

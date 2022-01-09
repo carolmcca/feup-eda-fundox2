@@ -7,26 +7,42 @@
 #include "Bag.h"
 
 class Game {
+private:
+	Bag bag;
+	std::vector<Player> players;
+	Rack rack, possibleRack;
+	Board board;
+	Turn turn;
+	std::set<std::string> dictionary;
+	int INITIAL_NUM_PLAYERS, numPlayers;
+	int SCORE_MAX; // TODO const
+	string dictionaryPath;
+	vector<Player**> changePlayer; //vamos mudar isto
+	bool isFirstWord;
+	int current; //acho que nï¿½o faz parte do game (?)
+	int passTurns, passRounds;
+	vector<Player*> winnerPlayers;
+	bool restoreRack; //daqui para baixo nï¿½o sei atï¿½ que ponto faz sentido estarem aqui
 public:
-	Game(const Bag& bag, const Rack& rack, const Board& board, const Turn& turn, int SCORE_MAX, const string& dictionaryPath);
+	Game(const Bag& bag, const Board& board, std::vector<Player>& players, int SCORE_MAX, const std::set<std::string>& dictionary);
 
 	void decreaseNumPlayers();
-	void setBag(char letter = '0'); //dependendo se está a pôr ou tirar letras, usa uma ou outra das funções da classe Bag
+	void setBag(char letter = '0'); //dependendo se estï¿½ a pï¿½r ou tirar letras, usa uma ou outra das funï¿½ï¿½es da classe Bag
 
-	//se metermos o main todo dentro do game, acho que há aqui uns qts gets que não servem para nada (same para o decreaseNumPlayers)
+	//se metermos o main todo dentro do game, acho que hï¿½ aqui uns qts gets que nï¿½o servem para nada (same para o decreaseNumPlayers)
 	//Rack getRack ();
 	//Board getBoard();
 	//Turn getTurn();
 	int getINITIALNUMPLAYERS() const;
 	int getNumPlayers() const;
 	int getSCOREMAX() const;
-	/*void setRack();*/ //o comentário de baixo aplica-se
-	/*void setPossibleRack();*/ //depende das funções set da classe Rack
-	/*void setTurn();*/ //depende das funções set da classe Turn
+	/*void setRack();*/ //o comentï¿½rio de baixo aplica-se
+	/*void setPossibleRack();*/ //depende das funï¿½ï¿½es set da classe Rack
+	/*void setTurn();*/ //depende das funï¿½ï¿½es set da classe Turn
 	void setWinnerPlayers();
 	void showWinners();
 
-	//isto afinal não é aqui, certo?
+	//isto afinal nï¿½o ï¿½ aqui, certo?
 	//bool isValid();
 	/*void getHalfLine(int& index, int*& row, int*& col, std::string& testWord, std::vector<Player**>& changePlayer, bool changeColor, int step);
 	std::string getLine(int& index, int*& row, int*& col, const std::string wordPart, std::vector<Player**>& changePlayer, bool changeColor);
@@ -34,22 +50,13 @@ public:
 
 	void updateScores();
 	void showScores() const;
-	void playTheGame();
-private:
-	Bag bag;
-	std::vector<Player> players;
-	Rack rack, possibleRack;
-	Board board;
-	Turn turn;
-	int INITIAL_NUM_PLAYERS, numPlayers;
-	int SCORE_MAX;
-	string dictionaryPath;
-	vector<Player**> changePlayer; //vamos mudar isto
-	bool isFirstWord;
-	int current; //acho que não faz parte do game (?)
-	int passTurns, passRounds;
-	vector<Player*> winnerPlayers;
-	bool restoreRack; //daqui para baixo não sei até que ponto faz sentido estarem aqui
-	bool validPosition;
-	bool isConnected;
+	void run();
+
+	vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
+	bool checkWordPlacement(const Turn& turn, const string path, Player& player, vector<Player**>& changePlayer, bool& isConnected);
+	void getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<Player**>& changePlayer, bool changeColor, int step);
+	string getLine(int& index, int*& row, int*& col, const string wordPart, vector<Player**>& changePlayer, bool changeColor);
+
+
+
 };

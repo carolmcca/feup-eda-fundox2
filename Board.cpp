@@ -22,6 +22,10 @@ vector<vector<pair<char, Player*>>> Board::getBoard() const {
 
 //-------------------------------------------------------------
 
+int Board::getSize() const {
+	return this->size;
+}
+//-------------------------------------------------------------
 void Board::show() const {
 	string letters = "ABCDEFGHIJKLM";
 	cout << "\n    a b c d e f g h i j k l m" << endl;
