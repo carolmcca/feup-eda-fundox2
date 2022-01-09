@@ -16,12 +16,6 @@ Bag::Bag() {
 //-----------------------------------------------------
 
 Bag::Bag(vector<char>& bag, mt19937 generator) {
-	// TODO põr no main
-
-	// srand(time(NULL));
-	// random_device rd;
-	// mt19937 g(rd());
-
 	shuffle(bag.begin(), bag.end(), generator);
 	this->bag = bag;
 }

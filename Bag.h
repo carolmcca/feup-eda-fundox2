@@ -2,7 +2,6 @@
 #include <vector>
 #include <random>
 
-
 class Bag {
 private:
 	vector <char> bag;

@@ -19,15 +19,15 @@ private:
 	string dictionaryPath;
 	vector<Player**> changePlayer; //vamos mudar isto
 	bool isFirstWord;
-	int current; //acho que n�o faz parte do game (?)
+	int current; 
 	int passTurns, passRounds;
 	vector<Player*> winnerPlayers;
-	bool restoreRack; //daqui para baixo n�o sei at� que ponto faz sentido estarem aqui
+	bool restoreRack;
 public:
 	Game(const Bag& bag, const Board& board, std::vector<Player>& players, int SCORE_MAX, const std::set<std::string>& dictionary);
 
 	void decreaseNumPlayers();
-	void setBag(char letter = '0'); //dependendo se est� a p�r ou tirar letras, usa uma ou outra das fun��es da classe Bag
+	//void setBag(char letter = '0'); //dependendo se est� a p�r ou tirar letras, usa uma ou outra das fun��es da classe Bag
 
 	//se metermos o main todo dentro do game, acho que h� aqui uns qts gets que n�o servem para nada (same para o decreaseNumPlayers)
 	//Rack getRack ();
@@ -41,12 +41,6 @@ public:
 	/*void setTurn();*/ //depende das fun��es set da classe Turn
 	void setWinnerPlayers();
 	void showWinners();
-
-	//isto afinal n�o � aqui, certo?
-	//bool isValid();
-	/*void getHalfLine(int& index, int*& row, int*& col, std::string& testWord, std::vector<Player**>& changePlayer, bool changeColor, int step);
-	std::string getLine(int& index, int*& row, int*& col, const std::string wordPart, std::vector<Player**>& changePlayer, bool changeColor);
-	bool checkWordPlacement(const std::string path, Player& player, std::vector<Player**>& changePlayer);*/
 
 	void updateScores();
 	void showScores() const;

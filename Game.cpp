@@ -1,10 +1,8 @@
-#include "iostream"
-#include "Game.h"
-#include "Turn.h"
-
-#include "fundox.h"
+#include <iostream>
 #include <iomanip>
 #include <algorithm>
+
+#include "Game.h"
 #include "utils.h"
 
 
@@ -33,12 +31,12 @@ void Game::decreaseNumPlayers() {
 }
 //-------------------------------------------------------------
 
-void Game::setBag(char letter = '0') {
-	if (letter == '0')
-		this->bag.removeLetter();
-	else
-		this->bag.addLetter(letter);
-}
+//void Game::setBag(char letter = '0') {
+//	if (letter == '0')
+//		this->bag.removeLetter();
+//	else
+//		this->bag.addLetter(letter);
+//}
 //-------------------------------------------------------------
 
 int Game::getINITIALNUMPLAYERS() const
@@ -88,17 +86,17 @@ void Game::showScores() const {
 //-------------------------------------------------------------
 
 void Game::run() {
-	while (players[current].getScore() < SCORE_MAX && passRounds < 3 && numPlayers > 1) {
-		current = (current + 1) % INITIAL_NUM_PLAYERS;
+	while (this->players[this->current].getScore() < this->SCORE_MAX && this->passRounds < 3 && this->numPlayers > 1) {
+		this->current = (this->current + 1) % this->INITIAL_NUM_PLAYERS;
 
-		if (!players[current].getGaveUp())
+		if (!this->players[this->current].getGaveUp())
 			continue;
 		
-		bool restoreRack = (passRounds > 0 && passTurns == 0);
+		bool restoreRack = (this->passRounds > 0 && this->passTurns == 0);
 		//setRack(bag, rack, restoreRack);
 		showScores();
 		board.show();
-		//rack.setRack();
+		//this->rack.show();
 		Turn turn;
 		
 		string message = players[current].getColor()+players[current].getName()+"'s turn"+dfltColor;
@@ -144,6 +142,8 @@ void Game::run() {
 			passTurns++;
 		}
 	}
+	showScores();
+	this->board.show();
 }
 //-------------------------------------------------------------
 void Game::setWinnerPlayers()
@@ -295,7 +295,7 @@ void Game::getHalfLine(int& index, int*& row, int*& col, string& testWord, vecto
 	while (index >= 0 && index < this->board.getSize() && board.getEntry(*row, *col).first != ' ') {
 		testWord.push_back(board.getEntry(*row, *col).first);
 		if (changeColor)
-			changePlayer.push_back(&(board.getEntry(*row, *col).second));
+			changePlayer.push_back(&(this->board.getEntry(*row, *col).second));
 		index += step;
 	}
 }
