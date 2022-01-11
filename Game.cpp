@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include "Game.h"
-#include "utils.h"
 
 
 
@@ -18,16 +17,13 @@ Game::Game(const Bag& bag, const Board& board, vector<Player>& players, int SCOR
 	this->players = players;
 	this->fillRack(true);
 	this->numPlayers = this->INITIAL_NUM_PLAYERS;
-	this->isFirstWord = true;
-	this->current = this->numPlayers - 1;
-	this->passTurns = 0;
-	this->passRounds = 0;
 }
 //-------------------------------------------------------------
 
 void Game::decreaseNumPlayers() {
 	this->numPlayers--;
 }
+
 //-------------------------------------------------------------
 
 //void Game::setBag(char letter = '0') {
@@ -57,12 +53,12 @@ int Game::getSCOREMAX() const
 
 void Game::updateScores() {
 	for (int i = 0; i < players.size(); i++)
-		players[i].setScore(0);
+		players[i].resetScore();
 
 	for (int i = 0; i < board.getSize(); i++) {
 		for (int j = 0; j < board.getSize(); j++) {
-			if (board.getEntry(i, j).second != -1)
-				this->players[board.getEntry(i, j).second].incScore(); //TODO: rever para tirar players do vetor
+			if (board.getId(i, j) != -1)
+				this->players[board.getId(i, j)].incScore(); //TODO: rever para tirar players do vetor
 		}
 	}
 }
@@ -85,12 +81,17 @@ void Game::showScores() const {
 //-------------------------------------------------------------
 
 void Game::run() {
-	while (this->players[this->current].getScore() < this->SCORE_MAX && this->passRounds < 3 && this->numPlayers > 1) {
-		this->current = (this->current + 1) % this->INITIAL_NUM_PLAYERS;
-		if (this->players[this->current].getGaveUp())
+	bool isFirstWord = true;
+	int current = this->numPlayers - 1;
+	int passTurns = 0;
+	int passRounds = 0;
+
+	while (this->players[current].getScore() < this->SCORE_MAX && passRounds < 3 && this->numPlayers > 1) {
+		current = (current + 1) % this->INITIAL_NUM_PLAYERS;
+		if (this->players[current].getGaveUp())
 			continue;
 		
-		bool restoreRack = (this->passRounds > 0 && this->passTurns == 0);
+		bool restoreRack = (passRounds > 0 && passTurns == 0); //TODO: está a mudar rack quando P P P P G (4 jog)
 		this->fillRack(restoreRack);
 		this->showScores();
 		this->board.show();
@@ -120,11 +121,11 @@ void Game::run() {
 		bool validPosition = true;
 		bool isConnected = isFirstWord;
 		vector<char> possibleRack = checkExistingLetters(turn, validPosition, isConnected);
-		if (validPosition && checkWordPlacement(turn, dictionaryPath, players[current], changePlayer, isConnected) && isConnected) {
+		if (validPosition && checkWordPlacement(turn, players[current], changePlayer, isConnected) && isConnected) {
 			isFirstWord = false;
 			this->rack.setRack(possibleRack);
 			for (int i = 0; i < turn.getWord().length(); i++) {
-				pair<char, int> entry = pair<char, int>(toupper(turn.getWordLetter(i)), current);
+				pair<char, int> entry = pair<char, int>(turn.getWordLetter(i), current);
 				if (turn.getIsVertical())
 						board.setEntry(turn.getRow() + i, turn.getCol(), entry);
 				else
@@ -194,13 +195,12 @@ void Game::showWinners()
 }
 
 vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected) {
-	vector<char> r = rack.getRack();
+	vector<char> possibleRack = rack.getRack();
 
 	bool spaceExists = false; // dictates whether or not the word is new 
 	int row = turn.getRow();
 	int col = turn.getCol();
 
-	turn.wordToUpper();
 	for (int i = 0; i < turn.getWord().size(); i++) {
 		// the cicle is broken if the word get's out of the board, overlaps with another word or there aren't enough letters to write it
 		if (row == this->board.getSize() || col == this->board.getSize()) {
@@ -209,15 +209,15 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 			validPosition = false;
 			break;
 		}
-		if (turn.getWordLetter(i) != board.getEntry(row, col).first) {
+		if (turn.getWordLetter(i) != board.getLetter(row, col)) {
 			// the char to be inserted is different from the one in the board
-			if (board.getEntry(row, col).first == ' ') {
+			if (board.getLetter(row, col) == ' ') {
 				// the position is free to receive the char
-				vector<char>::iterator pos = find(r.begin(), r.end(), turn.getWordLetter(i));
-				if (pos != r.end()) {
+				vector<char>::iterator pos = find(possibleRack.begin(), possibleRack.end(), turn.getWordLetter(i));
+				if (pos != possibleRack.end()) {
 					// the char to be inserted is on the rack
 					spaceExists = true;
-					r.erase(pos);
+					possibleRack.erase(pos);
 				}
 				else {
 					// the char isn't on the rack - invalid choice of word
@@ -243,10 +243,10 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 			col++;
 	}
 	validPosition = (validPosition && spaceExists);
-	return r;
+	return possibleRack;
 }
 
-bool Game::checkWordPlacement(const Turn& turn, const string path, Player& player, vector<int*>& changePlayer, bool& isConnected) {
+bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& changePlayer, bool& isConnected) {
 	changePlayer.clear();
 	string testWord;
 	bool changeColor;
@@ -285,7 +285,7 @@ bool Game::checkWordPlacement(const Turn& turn, const string path, Player& playe
 	for (int i = 0; i < turn.getWord().length(); i++) {
 		perpendicularIndex = initialPerpendicularIndex + i;
 		paralelIndex = initialParalelIndex;
-		changeColor = board.getEntry(*row, *col).first == ' ';
+		changeColor = board.getLetter(*row, *col) == ' ';
 
 		string letter = { turn.getWordLetter(i) };
 		// get the word formed by the letter i of the played word in its perpendicular direction
@@ -304,10 +304,10 @@ bool Game::checkWordPlacement(const Turn& turn, const string path, Player& playe
 }
 
 void Game::getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<int*>& changePlayer, bool changeColor, int step) {
-	while (index >= 0 && index < this->board.getSize() && board.getEntry(*row, *col).first != ' ') {
-		testWord.push_back(board.getEntry(*row, *col).first);
+	while (index >= 0 && index < this->board.getSize() && board.getLetter(*row, *col) != ' ') {
+		testWord.push_back(board.getLetter(*row, *col));
 		if (changeColor)
-			changePlayer.push_back(this->board.getEntryPointer(*row, *col));
+			changePlayer.push_back(this->board.getIdPointer(*row, *col));
 		index += step;
 	}
 }
@@ -324,27 +324,3 @@ string Game::getLine(int& index, int*& row, int*& col, const string wordPart, ve
 	getHalfLine(index, row, col, testWord, changePlayer, changeColor, 1);
 	return testWord;
 }
-
-//como ficaria o main neste caso (excluindo algumas declara��es de vari�veis das diferentes classes)
-
-//int main()
-//{
-//	int SCORE_MAX;
-//	string dictionaryPath;
-//
-//	Board(BOARD_SIZE); //magic numbers...?
-//
-//	ifstream extractFile = readConfig(SCORE_MAX, dictionaryPath);
-//
-//	Bag bag(extractFile);
-//	//Rack rack();
-//	//Turn turn();
-//
-//	//os players s�o definidos dentro do Game
-//	Game game(bag, rack, board, turn, SCORE_MAX, dictionaryPath);
-//	game.playTheGame();
-//	game.setWinnerPlayers();
-//	game.showWinners();
-//
-//	return 0;
-//}

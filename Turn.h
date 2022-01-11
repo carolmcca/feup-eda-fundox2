@@ -1,4 +1,5 @@
 #pragma once
+#include "utils.h"
 #include <string>
 #include <set>
 
@@ -18,7 +19,7 @@ private:
 	std::string word;
 	int row;
 	int col;
-	bool isVertical, validPosition, wordIsConnected;
+	bool isVertical;
 public:
 	Turn();
 	std::string getWord() const;
@@ -29,6 +30,5 @@ public:
 	TurnPlay readWord(const std::string& message, const std::set<std::string>& dictionary);
 	void readDirection();
 	void readPosition();
-	void wordToUpper();
 };
 

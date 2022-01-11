@@ -1,5 +1,4 @@
 #include "Turn.h"
-#include "utils.h"
 #include <iostream>
 #include <string>
 
@@ -12,15 +11,15 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 	while (attempts < NUM_MAX_ATTEMPTS) {
 		cout << "Word: ";
 		cin >> word;
-		this->word = word;
-		if (!valid("cin", "Please insert a valid word.\n")) {
+		wordToUpper(word);
+		if (!isInputValid("cin", "Please insert a valid word.\n")) {
 			attempts++;
 		}
 		else {
-			if (word == "P" || word == "p") {
+			if (word == "P") {
 				return PASS;
 			}
-			else if (word == "G" || word == "g") {
+			else if (word == "G") {
 				return GIVEUP;
 			}
 			else {
@@ -29,6 +28,7 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 					cout << "The inserted word isn't in the dictionary, please insert a valid word.\n";
 				}
 				else {
+					this->word = word;
 					return PLAY;
 				}
 			}
@@ -38,13 +38,15 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 	return PASS;
 }
 
+//------------------------------------------------------------------------------------------------
+
 void Turn::readDirection() {
 	char direction;
 	while (true) {
 		cout << "Direction (H / V) : ";
 		cin >> direction;
 		direction = toupper(direction);
-		if (valid("cin")) {
+		if (isInputValid("cin")) {
 			if (direction == 'V') {
 				this->isVertical = true;
 				return;
@@ -63,7 +65,7 @@ void Turn::readPosition() {
 	while (true) {
 		cout << "Position of 1st letter (ROW column): ";
 		getline(cin, line);
-		if (valid("getline") && line.size() == 3) {
+		if (isInputValid("getline") && line.size() == 3) {
 			if (line[1] == ' ') {
 				this->row = int(line[0] - 'A');
 				this->col = int(line[2] - 'a');
@@ -76,11 +78,6 @@ void Turn::readPosition() {
 			cout << "Error. Example of valid input:\nA b" << endl;
 		}
 	}
-}
-
-void Turn::wordToUpper() {
-  for (int i = 0; i < this->word.size(); i++)
-    this->word[i] = toupper(this->word[i]);
 }
 
 

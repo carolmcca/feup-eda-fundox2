@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include "Player.h"
-#include "utils.h"
 
 using namespace std;
 
@@ -14,22 +13,10 @@ Player::Player(string name, int id) {
 	this->gaveUp = false;
 }
 
-//----------------------------------------------------
-
-void Player::setName(const string& name) {
-	this->name = name;
-}
-
-//-----------------------------------------------------
-
-void Player::setColor(const string& color) {
-	this->color = color;
-}
-
 //------------------------------------------------------
 
-void Player::setScore(const int& score) {
-	this->score = score;
+void Player::resetScore() {
+	this->score = 0;
 }
 
 //------------------------------------------------------
@@ -67,11 +54,4 @@ bool Player::getGaveUp() const {
 void Player::incScore() {
 	this->score++;
 }
-
-void Player::setId(int id) {
-	this->id = id;
-}
-
-int Player::getId() const {
-	return this->id;
-}
+ //---------------------------------------------------------

@@ -12,8 +12,6 @@
 
 using namespace std;
 
-// set colors
-
 
 void readConfig(int& scoreMax, string& dictionaryPath, vector<char>& bag) { 
 
@@ -42,17 +40,17 @@ void readNumPlayers(int& numPlayers) {
 	while (true) {
 		cout << "Please insert the number of players (2-4): ";
 		cin >> numPlayers;
-		if (valid("cin") && numPlayers >= 2 && numPlayers <= 4)
+		if (isInputValid("cin") && numPlayers >= 2 && numPlayers <= 4)
 			return;
 		cout << "The number must be an integer between 2 and 4!" << endl;
 	}
 }
-void readNamePlayer(string& name, const int& index) { //sem classe (?) por a retornar a string e alteramos depois aonstruindo o player ao mesmo tempo?
+void readNamePlayer(string& name, const int& index) { 
 	while (true) {
 		cout << colors[index] << "Player " << index + 1 << ": ";
 		getline(cin, name);
 		cout << dfltColor;
-		if (valid("getline", "Please insert a valid name\n")) {
+		if (isInputValid("getline", "Please insert a valid name\n")) {
 			if (name.size() == 0) {
 				cout << "Your name will be Player" << index + 1 << endl;
 				name = "Player" + to_string(index + 1);
@@ -90,6 +88,7 @@ int main() {
 	string dictionaryPath;
 	vector<char> bagVector;
 	set<string> dictionary;
+
 	readConfig(SCORE_MAX, dictionaryPath, bagVector);
 	setDictionary(dictionary, dictionaryPath);
 

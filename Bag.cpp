@@ -6,11 +6,11 @@
 #include <utility>
 #include <time.h>
 
-
 using namespace std;
 
 Bag::Bag() {
-	
+	this->bag = {};
+	this->size = 0;
 }
 
 //-----------------------------------------------------
@@ -20,11 +20,6 @@ Bag::Bag(vector<char>& bag, mt19937 generator) {
 	this->bag = bag;
 	this->size = bag.size();
 }
-//-----------------------------------------------------
-
-//vector <char> Bag::getBag() {
-//	return this->bag;
-//}
 
 //------------------------------------------------------
 
@@ -43,14 +38,10 @@ void Bag::addLetter(char letter) {
 }
 
 
-//-------------------------------------------------------
-
-void Bag::removeLetter() {
-	this->bag.pop_back();
-	this->size--;
-}
 //----------------------------------------------------------
 
-int Bag::getSize() const {
+int Bag::getSize() const { 
 	return this->size;
 }
+
+//----------------------------------------------------------

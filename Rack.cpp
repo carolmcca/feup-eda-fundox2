@@ -1,5 +1,4 @@
 #include "Rack.h"
-#include "utils.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -8,10 +7,11 @@ using namespace std;
 
 Rack::Rack() {
 	this->rack = {};
+	this->size = 0;
 }
 
 
-vector<char> Rack::getRack() const {  // tenho de procurar sobre multisets
+vector<char> Rack::getRack() const {  //TODO: multisets
 	return this->rack;
 }
 

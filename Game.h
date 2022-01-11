@@ -5,22 +5,19 @@
 #include "Turn.h"
 #include "Player.h"
 #include "Bag.h"
+#include "utils.h"
 #include <set>
 
 class Game {
 private:
 	Bag bag;
 	std::vector<Player> players;
-	Rack rack, possibleRack;
+	Rack rack;
 	Board board;
 	std::set<std::string> dictionary;
 	int INITIAL_NUM_PLAYERS, numPlayers;
 	int SCORE_MAX; // TODO const
-	std::string dictionaryPath;
 	std::vector<int*> changePlayer; //TODO vamos mudar isto
-	bool isFirstWord;
-	int current; 
-	int passTurns, passRounds;
 	std::vector<Player*> winnerPlayers;
 public:
 	Game(const Bag& bag, const Board& board, std::vector<Player>& players, int SCORE_MAX, const std::set<std::string>& dictionary);
@@ -46,7 +43,7 @@ public:
 	void run();
 
 	std::vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
-	bool checkWordPlacement(const Turn& turn, const std::string path, Player& player, std::vector<int*>& changePlayer, bool& isConnected);
+	bool checkWordPlacement(const Turn& turn, Player& player, std::vector<int*>& changePlayer, bool& isConnected);
 	void getHalfLine(int& index, int*& row, int*& col, std::string& testWord, std::vector<int*>& changePlayer, bool changeColor, int step);
 	std::string getLine(int& index, int*& row, int*& col, const std::string wordPart, std::vector<int*>& changePlayer, bool changeColor);
 

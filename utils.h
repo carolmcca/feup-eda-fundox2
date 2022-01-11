@@ -1,3 +1,4 @@
+#pragma once
 #include <set>
 #include <string>
 #include <vector>
@@ -18,4 +19,7 @@ const std::string FILE_CONFIG = "CONFIG.txt";
 
 bool searchWord(const std::set<std::string>& dictionary, std::string word);
 
-bool valid(const std::string& inputType, const std::string errorMessage = "", const char terminator = '\n');
+bool isInputValid(const std::string& inputType, const std::string errorMessage = "", const char terminator = '\n');
+
+void wordToUpper(std::string& word);
+void wordToLower(std::string& word);

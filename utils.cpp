@@ -3,8 +3,8 @@
 
 using namespace std;
 
-// TODO mudar nome para isValidInput
-bool valid(const string& inputType, const string errorMessage, const char terminator) {
+
+bool isInputValid(const string& inputType, const string errorMessage, const char terminator) {
 	if (cin.fail()) {
 		if (cin.eof()) {
 			cin.clear();
@@ -28,8 +28,16 @@ bool valid(const string& inputType, const string errorMessage, const char termin
 }
 
 bool searchWord(const set<string>& dictionary, string word) {
-	for (int i = 0; i < word.length(); i++)
-		word[i] = tolower(word[i]);
-
+	wordToLower(word);
 	return dictionary.find(word) != dictionary.end();
+}
+
+void wordToLower(string &word) {
+	for (int i = 0; i < word.size(); i++)
+		word[i] = tolower(word[i]);
+}
+
+void wordToUpper(string &word) {
+	for (int i = 0; i < word.size(); i++)
+		word[i] = toupper(word[i]);
 }

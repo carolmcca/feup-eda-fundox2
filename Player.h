@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "utils.h"
 
 class Player {
 private:
@@ -12,15 +13,11 @@ private:
 
 public:
 	Player(std::string name, int id);
-	void setName(const std::string& name);
-	void setColor(const std::string& color);
-	void setScore(const int& score);
+	void resetScore();
 	void setGaveUp(const bool& gaveUp);
 	std::string getName() const;
 	std::string getColor() const;
 	int getScore() const;
 	bool getGaveUp() const;
 	void incScore();
-	void setId(int id);
-	int getId() const;
 };
