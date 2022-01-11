@@ -104,7 +104,7 @@ int main() {
 	}
 
 	Bag bag(bagVector, generator);
-	Board board(BOARD_SIZE);
+	Board board(BOARD_ROWS, BOARD_COLS);
 	Game game(bag, board, players, SCORE_MAX, dictionary);
 	
 	game.run();

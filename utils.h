@@ -13,7 +13,8 @@ const std::string black = "\033[30m";
 const std::vector<std::string> colors = { red, blue, green, magenta };
 
 const int NUM_MAX_ATTEMPTS = 3;
-const int BOARD_SIZE = 13;
+const int BOARD_ROWS = 10;
+const int BOARD_COLS = 15;
 const int RACK_SIZE = 7;
 const std::string FILE_CONFIG = "CONFIG.txt";
 

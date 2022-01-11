@@ -55,8 +55,8 @@ void Game::updateScores() {
 	for (int i = 0; i < players.size(); i++)
 		players[i].resetScore();
 
-	for (int i = 0; i < board.getSize(); i++) {
-		for (int j = 0; j < board.getSize(); j++) {
+	for (int i = 0; i < board.getNumRows(); i++) {
+		for (int j = 0; j < board.getNumCols(); j++) {
 			if (board.getId(i, j) != -1)
 				this->players[board.getId(i, j)].incScore(); //TODO: rever para tirar players do vetor
 		}
@@ -66,11 +66,11 @@ void Game::updateScores() {
 //-------------------------------------------------------------
 
 void Game::showScores() const {
-	cout << endl << setw(board.getSize() - 2) << " ";
+	cout << endl << setw(board.getNumCols() - 2) << " ";
 	cout << "SCORE BOARD" << endl;
 
 	int gaveUpSize = std::count_if(players.begin(), players.end(), [](const Player& p) { return p.getGaveUp(); });
-	cout << setw(board.getSize() - players.size() + gaveUpSize + 1) << " ";
+	cout << setw(board.getNumCols() - players.size() + gaveUpSize + 1) << " ";
 	for (int i = 0; i < players.size(); i++) {
 		if (!players[i].getGaveUp())
 			cout << players[i].getColor() << setw(3) << players[i].getScore();
@@ -95,7 +95,7 @@ void Game::run() {
 		this->fillRack(restoreRack);
 		this->showScores();
 		this->board.show();
-		this->rack.show(this->board.getSize());
+		this->rack.show(this->board.getNumCols());
 		Turn turn;
 		
 		string message = players[current].getColor()+players[current].getName()+"'s turn"+dfltColor;
@@ -203,7 +203,7 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 
 	for (int i = 0; i < turn.getWord().size(); i++) {
 		// the cicle is broken if the word get's out of the board, overlaps with another word or there aren't enough letters to write it
-		if (row == this->board.getSize() || col == this->board.getSize()) {
+		if (row == this->board.getNumRows() || col == this->board.getNumCols()) {
 			// the word get's out of the board limits
 			cout << "Your word doesn't fit on the board. You lost your turn.\n";
 			validPosition = false;
@@ -252,6 +252,8 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 	bool changeColor;
 	int perpendicularIndex, paralelIndex;
 	int initialParalelIndex, initialPerpendicularIndex;
+	const int* parallelBoardSize;
+	const int* perpendicularBoardSize;
 	int* row;
 	int* col;
 
@@ -262,19 +264,23 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 		initialParalelIndex = turn.getCol();
 		row = &perpendicularIndex;
 		col = &paralelIndex;
+		parallelBoardSize = &BOARD_COLS; //TODO: chamge this
+		perpendicularBoardSize = &BOARD_ROWS;
 	}
 	else {
 		initialParalelIndex = turn.getRow();
 		initialPerpendicularIndex = turn.getCol();
 		row = &paralelIndex;
 		col = &perpendicularIndex;
+		parallelBoardSize = &BOARD_ROWS; //TODO: chamge this
+		perpendicularBoardSize = &BOARD_COLS;
 	}
 
 
 	paralelIndex = initialParalelIndex;
 	perpendicularIndex = initialPerpendicularIndex;
 	// get the word formed in the same direction as the played word
-	testWord = getLine(perpendicularIndex, row, col, turn.getWord(), changePlayer, true);
+	testWord = getLine(perpendicularBoardSize, perpendicularIndex, row, col, turn.getWord(), changePlayer, true);
 	if (!searchWord(this->dictionary, testWord)) {
 		cout << "Your choice of word placement is impossible with the current board. You lost you turn.";
 		return false;
@@ -289,7 +295,7 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 
 		string letter = { turn.getWordLetter(i) };
 		// get the word formed by the letter i of the played word in its perpendicular direction
-		testWord = getLine(paralelIndex, row, col, letter, changePlayer, changeColor);
+		testWord = getLine(parallelBoardSize, paralelIndex, row, col, letter, changePlayer, changeColor);
 		if (testWord.length() > 1) {
 			if (!searchWord(this->dictionary, testWord)) {
 				cout << "Your choice of word placement is impossible with the current board. You lost you turn.";
@@ -303,24 +309,24 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 	return true;
 }
 
-void Game::getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<int*>& changePlayer, bool changeColor, int step) {
-	while (index >= 0 && index < this->board.getSize() && board.getLetter(*row, *col) != ' ') {
+void Game::getHalfLine(const int* boardSize, int& index, int*& row, int*& col, string& testWord, vector<int*>& changePlayer, bool changeColor, int step) {
+	while (index >= 0 && index < *boardSize && board.getLetter(*row, *col) != ' ') {
 		testWord.push_back(board.getLetter(*row, *col));
 		if (changeColor)
 			changePlayer.push_back(this->board.getIdPointer(*row, *col));
 		index += step;
 	}
 }
-string Game::getLine(int& index, int*& row, int*& col, const string wordPart, vector<int*>& changePlayer, bool changeColor) {
+string Game::getLine(const int* boardSize, int& index, int*& row, int*& col, const string wordPart, vector<int*>& changePlayer, bool changeColor) {
 	string testWord;
 	index--;
-	getHalfLine(index, row, col, testWord, changePlayer, changeColor, -1);
+	getHalfLine(boardSize, index, row, col, testWord, changePlayer, changeColor, -1);
 	if (testWord.length() != 0)
 		reverse(testWord.begin(), testWord.end());
 
 	testWord += wordPart;
 
 	index += testWord.length() + 1;
-	getHalfLine(index, row, col, testWord, changePlayer, changeColor, 1);
+	getHalfLine(boardSize, index, row, col, testWord, changePlayer, changeColor, 1);
 	return testWord;
 }

@@ -5,34 +5,41 @@ using namespace std;
 
 Board::Board() {
 	this->board = {};
-	this->size = 0;
+	this->numRows = 0;
+	this->numCols = 0;
 }
 
-Board::Board(const int BOARD_SIZE) {
-	this->size = BOARD_SIZE;
-	for (int i = 0; i < this->size; i++) {
-		this->board.push_back({});
-		this->rowMarker.push_back('A'+i);
+Board::Board(const int BOARD_ROWS, const int BOARD_COLS) {
+	this->numRows = BOARD_ROWS;
+	this->numCols = BOARD_COLS;
+	this->board = vector<vector<pair<char, int>>>(this->numRows, vector<pair<char, int>>(this->numCols, pair<char, int> (' ', -1)));
+	for (int i = 0; i < this->numRows; i++) {
+		this->rowMarker.push_back('A' + i);
+	}
+	for (int i = 0; i < this->numCols; i++) {
 		this->colMarker.push_back('a' + i);
 		this->colMarker.push_back(' ');
-		for (int j = 0; j < this->size; j++) {
-			this->board[i].push_back(pair<char, int>(' ', -1));
-		}
 	}
 }
 
 //-------------------------------------------------------------
 
-int Board::getSize() const {
-	return this->size;
+int Board::getNumRows() const {
+	return this->numRows;
+}
+
+//-------------------------------------------------------------
+
+int Board::getNumCols() const {
+	return this->numCols;
 }
 //-------------------------------------------------------------
 
 void Board::show() const {
 	cout << endl << "    " << this->colMarker << endl;
-	for (int i = 0; i < this->size; i++) {
+	for (int i = 0; i < this->numRows; i++) {
 		cout << " " << this->rowMarker[i] << " " << bgGrey << " ";
-		for (int j = 0; j < this->size; j++) {
+		for (int j = 0; j < this->numCols; j++) {
 			if (this->board[i][j].second != -1)
 				cout << colors[this->board[i][j].second];
 			cout << this->board[i][j].first << " ";

@@ -69,7 +69,7 @@ void Turn::readPosition() {
 			if (line[1] == ' ') {
 				this->row = int(line[0] - 'A');
 				this->col = int(line[2] - 'a');
-				if (0 <= this->row && BOARD_SIZE > this->row && 0 <= this->col && BOARD_SIZE > this->col)
+				if (0 <= this->row && BOARD_ROWS > this->row && 0 <= this->col && BOARD_COLS > this->col)
 					return;
 				cout << "Error. Example of valid input:\nA b" << endl;
 			}
