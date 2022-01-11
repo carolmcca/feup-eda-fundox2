@@ -2,17 +2,20 @@
 #include <string>
 #include <vector>
 
-const std::string dfltColor;
-const std::string bgGrey;
-const std::string red;
-const std::string blue;
-const std::string green;
-const std::string magenta;
-const std::string black;
-const vector<string> colors;
+const std::string dfltColor = "\033[0m";
+const std::string bgGrey = "\033[47m";
+const std::string red = "\033[31m";
+const std::string blue = "\033[34m";
+const std::string green = "\033[92m";
+const std::string magenta = "\033[95m";
+const std::string black = "\033[30m";
+const std::vector<std::string> colors = { red, blue, green, magenta };
 
-const int NUM_MAX_ATTEMPTS;
-const int BOARD_SIZE;
-const string FILE_CONFIG;
+const int NUM_MAX_ATTEMPTS = 3;
+const int BOARD_SIZE = 13;
+const int RACK_SIZE = 7;
+const std::string FILE_CONFIG = "CONFIG.txt";
 
 bool searchWord(const std::set<std::string>& dictionary, std::string word);
+
+bool valid(const std::string& inputType, const std::string errorMessage = "", const char terminator = '\n');

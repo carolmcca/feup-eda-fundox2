@@ -8,12 +8,11 @@
 #include "Rack.h"
 #include "Turn.h"
 #include "Game.h"
+#include "utils.h"
 
-const std::string dfltColor;
-const std::string bgGrey;
-const std::string red;
-const std::string blue;
-const std::string green;
-const std::string magenta;
-const std::string black;
-const std::vector<std::string> colors;
+void readConfig(int& scoreMax, std::string& dictionaryPath, std::vector<char>& bag);
+
+void readNumPlayers(int& numPlayers);
+void readNamePlayer(std::string& name, const int& index);
+
+void setDictionary(std::set<std::string>& dictionary, const std::string& path);

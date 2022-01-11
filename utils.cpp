@@ -1,19 +1,31 @@
 #include "utils.h"
+#include <iostream>
 
 using namespace std;
 
-const string dfltColor = "\033[0m";
-const string bgGrey = "\033[47m";
-const string red = "\033[31m";
-const string blue = "\033[34m";
-const string green = "\033[92m";
-const string magenta = "\033[95m";
-const string black = "\033[30m";
-const vector<string> colors = { red, blue, green, magenta };
-
-const int NUM_MAX_ATTEMPTS = 3;
-const int BOARD_SIZE = 13;
-const string FILE_CONFIG = "CONFIG.txt";
+// TODO mudar nome para isValidInput
+bool valid(const string& inputType, const string errorMessage, const char terminator) {
+	if (cin.fail()) {
+		if (cin.eof()) {
+			cin.clear();
+		}
+		else {
+			cin.clear();
+			cin.ignore(1000, terminator);
+		}
+	}
+	else if (inputType == "cin") {
+		bool correctTerminator = cin.peek() == terminator;
+		cin.ignore(10000, terminator);
+		if (correctTerminator)
+			return true;
+	}
+	else {
+		return true;
+	}
+	cout << errorMessage;
+	return false;
+}
 
 bool searchWord(const set<string>& dictionary, string word) {
 	for (int i = 0; i < word.length(); i++)

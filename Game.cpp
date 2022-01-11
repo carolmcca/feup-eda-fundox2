@@ -8,21 +8,20 @@
 
 
 using namespace std;
-//Turn: faz sentido passar j�? ainda n�o existe
+
 Game::Game(const Bag& bag, const Board& board, vector<Player>& players, int SCORE_MAX, const set<string>& dictionary) {
 	this->bag = bag;
 	this->board = board;
 	this->SCORE_MAX = SCORE_MAX;
-	//isto pode n�o ser preciso dependendo do turn | perguntar � Bolinha
+	this->INITIAL_NUM_PLAYERS = players.size();
 	this->dictionary = dictionary;
 	this->players = players;
-
-	numPlayers = INITIAL_NUM_PLAYERS;
-	isFirstWord = true;
-	current = numPlayers - 1;
-	passTurns = 0;
-	passRounds = 0;
-	restoreRack = false;
+	this->fillRack(true);
+	this->numPlayers = this->INITIAL_NUM_PLAYERS;
+	this->isFirstWord = true;
+	this->current = this->numPlayers - 1;
+	this->passTurns = 0;
+	this->passRounds = 0;
 }
 //-------------------------------------------------------------
 
@@ -62,8 +61,8 @@ void Game::updateScores() {
 
 	for (int i = 0; i < board.getSize(); i++) {
 		for (int j = 0; j < board.getSize(); j++) {
-			if (board.getBoard()[i][j].second != nullptr)
-				board.getBoard()[i][j].second->incScore();
+			if (board.getEntry(i, j).second != -1)
+				this->players[board.getEntry(i, j).second].incScore(); //TODO: rever para tirar players do vetor
 		}
 	}
 }
@@ -88,19 +87,18 @@ void Game::showScores() const {
 void Game::run() {
 	while (this->players[this->current].getScore() < this->SCORE_MAX && this->passRounds < 3 && this->numPlayers > 1) {
 		this->current = (this->current + 1) % this->INITIAL_NUM_PLAYERS;
-
-		if (!this->players[this->current].getGaveUp())
+		if (this->players[this->current].getGaveUp())
 			continue;
 		
 		bool restoreRack = (this->passRounds > 0 && this->passTurns == 0);
-		//setRack(bag, rack, restoreRack);
-		showScores();
-		board.show();
-		//this->rack.show();
+		this->fillRack(restoreRack);
+		this->showScores();
+		this->board.show();
+		this->rack.show(this->board.getSize());
 		Turn turn;
 		
 		string message = players[current].getColor()+players[current].getName()+"'s turn"+dfltColor;
-		TurnPlay input = turn.readWord(message, dictionaryPath);
+		TurnPlay input = turn.readWord(message, this->dictionary);
 		switch (input) {
 		case PASS:
 			passRounds += (passTurns + 1) / numPlayers;
@@ -115,26 +113,25 @@ void Game::run() {
 			passTurns = 0;
 			passRounds = 0;
 		}
-		//turn.getRow();
-		//turn.getCol();
-		//turn.getIsVertival();
+		
+		turn.readPosition();
+		turn.readDirection();
 
 		bool validPosition = true;
 		bool isConnected = isFirstWord;
 		vector<char> possibleRack = checkExistingLetters(turn, validPosition, isConnected);
 		if (validPosition && checkWordPlacement(turn, dictionaryPath, players[current], changePlayer, isConnected) && isConnected) {
 			isFirstWord = false;
-			rack.setRack(possibleRack);
+			this->rack.setRack(possibleRack);
 			for (int i = 0; i < turn.getWord().length(); i++) {
-				// n�o sei se tenho de mudar isto mas n�o me parece
-				pair<char, Player*> entry = pair<char, Player*>(toupper(turn.getWordLetter(i)), &players[current]);
+				pair<char, int> entry = pair<char, int>(toupper(turn.getWordLetter(i)), current);
 				if (turn.getIsVertical())
 						board.setEntry(turn.getRow() + i, turn.getCol(), entry);
 				else
 						board.setEntry(turn.getRow(), turn.getCol() + i, entry);
 			}
 			for (int i = 0; i < changePlayer.size(); i++)
-				*changePlayer[i] = &players[current];
+				*changePlayer[i] = current;
 
 			updateScores();
 		}
@@ -166,6 +163,23 @@ void Game::setWinnerPlayers()
 
 //-------------------------------------------------------------
 
+
+void Game::fillRack(bool restoreRack) {
+	if (restoreRack) {  //quando queremos mandar a rack de volta para a bag e fazer uma nova?
+		while (this->rack.getSize()>0) {
+			char letter = this->rack.getLastLetter();
+			// insert the letter extracted from the rack in a random position of the bag -> void Bag::addLetter(char letter)
+			this->bag.addLetter(letter);
+		}
+	}
+	//not here
+	while (rack.getSize() < RACK_SIZE && this->bag.getSize() > 0) {
+		rack.addLetter(this->bag.getLastLetter());
+		// void Bag::removeLetter() -> bag.pop_back();
+	}
+	rack.sort();
+}
+
 void Game::showWinners()
 {
 	if (winnerPlayers.size() == 1) {
@@ -187,16 +201,14 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 	int col = turn.getCol();
 
 	turn.wordToUpper();
-
 	for (int i = 0; i < turn.getWord().size(); i++) {
 		// the cicle is broken if the word get's out of the board, overlaps with another word or there aren't enough letters to write it
-		if (turn.getRow() == this->board.getSize() || turn.getCol() == this->board.getSize()) {
+		if (row == this->board.getSize() || col == this->board.getSize()) {
 			// the word get's out of the board limits
 			cout << "Your word doesn't fit on the board. You lost your turn.\n";
 			validPosition = false;
 			break;
 		}
-
 		if (turn.getWordLetter(i) != board.getEntry(row, col).first) {
 			// the char to be inserted is different from the one in the board
 			if (board.getEntry(row, col).first == ' ') {
@@ -234,7 +246,7 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 	return r;
 }
 
-bool Game::checkWordPlacement(const Turn& turn, const string path, Player& player, vector<Player**>& changePlayer, bool& isConnected) {
+bool Game::checkWordPlacement(const Turn& turn, const string path, Player& player, vector<int*>& changePlayer, bool& isConnected) {
 	changePlayer.clear();
 	string testWord;
 	bool changeColor;
@@ -291,15 +303,15 @@ bool Game::checkWordPlacement(const Turn& turn, const string path, Player& playe
 	return true;
 }
 
-void Game::getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<Player**>& changePlayer, bool changeColor, int step) {
+void Game::getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<int*>& changePlayer, bool changeColor, int step) {
 	while (index >= 0 && index < this->board.getSize() && board.getEntry(*row, *col).first != ' ') {
 		testWord.push_back(board.getEntry(*row, *col).first);
 		if (changeColor)
-			changePlayer.push_back(&(this->board.getEntry(*row, *col).second));
+			changePlayer.push_back(this->board.getEntryPointer(*row, *col));
 		index += step;
 	}
 }
-string Game::getLine(int& index, int*& row, int*& col, const string wordPart, vector<Player**>& changePlayer, bool changeColor) {
+string Game::getLine(int& index, int*& row, int*& col, const string wordPart, vector<int*>& changePlayer, bool changeColor) {
 	string testWord;
 	index--;
 	getHalfLine(index, row, col, testWord, changePlayer, changeColor, -1);

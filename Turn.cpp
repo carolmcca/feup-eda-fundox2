@@ -1,15 +1,18 @@
 #include "Turn.h"
+#include "utils.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-TurnPlay Turn::readWord(const string& message, const string& dictionary) {
+TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 	cout << message << endl;
 	int attempts = 0;
+	string word;
 	while (attempts < NUM_MAX_ATTEMPTS) {
 		cout << "Word: ";
 		cin >> word;
+		this->word = word;
 		if (!valid("cin", "Please insert a valid word.\n")) {
 			attempts++;
 		}
@@ -40,13 +43,14 @@ void Turn::readDirection() {
 	while (true) {
 		cout << "Direction (H / V) : ";
 		cin >> direction;
+		direction = toupper(direction);
 		if (valid("cin")) {
-			if (direction == 'v' || direction == 'V') {
-				turn.isVertical = true;
+			if (direction == 'V') {
+				this->isVertical = true;
 				return;
 			}
-			else if (direction == 'h' || direction == 'H') {
-				turn.isVertical = false;
+			else if (direction == 'H') {
+				this->isVertical = false;
 				return;
 			}
 		}
@@ -61,9 +65,9 @@ void Turn::readPosition() {
 		getline(cin, line);
 		if (valid("getline") && line.size() == 3) {
 			if (line[1] == ' ') {
-				turn.row = int(line[0] - 'A');
-				turn.col = int(line[2] - 'a');
-				if (0 <= turn.row && BOARD_SIZE > turn.row && 0 <= turn.col && BOARD_SIZE > turn.col)
+				this->row = int(line[0] - 'A');
+				this->col = int(line[2] - 'a');
+				if (0 <= this->row && BOARD_SIZE > this->row && 0 <= this->col && BOARD_SIZE > this->col)
 					return;
 				cout << "Error. Example of valid input:\nA b" << endl;
 			}
@@ -77,4 +81,29 @@ void Turn::readPosition() {
 void Turn::wordToUpper() {
   for (int i = 0; i < this->word.size(); i++)
     this->word[i] = toupper(this->word[i]);
+}
+
+
+Turn::Turn() {
+	
+}
+
+char Turn::getWordLetter(int i) const {
+	return this->word[i];
+}
+
+string Turn::getWord() const {
+	return this->word;
+}
+
+int Turn::getRow() const {
+	return row;
+}
+
+int Turn::getCol() const {
+	return col;
+}
+
+bool Turn::getIsVertical() const {
+	return isVertical;
 }

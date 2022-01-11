@@ -37,29 +37,6 @@ void readConfig(int& scoreMax, string& dictionaryPath, vector<char>& bag) {
 	extractFile.close();
 }
 
-// TODO mudar nome para isValidInput
-bool valid(const string& inputType, const string errorMessage = "", const char terminator = '\n') {
-	if (cin.fail()) {
-		if (cin.eof()) {
-			cin.clear();
-		}
-		else {
-			cin.clear();
-			cin.ignore(1000, terminator);
-		}
-	}
-	else if (inputType == "cin") {
-		bool correctTerminator = cin.peek() == terminator;
-		cin.ignore(10000, terminator);
-		if (correctTerminator)
-			return true;
-	}
-	else {
-		return true;
-	}
-	cout << errorMessage;
-	return false;
-}
 
 void readNumPlayers(int& numPlayers) {
 	while (true) {
@@ -123,7 +100,7 @@ int main() {
 	vector<Player> players;
 	for (int i = 0; i < INITIAL_NUM_PLAYERS; i++) {
 		readNamePlayer(name, i);
-		Player player(name, colors[i]);
+		Player player(name, i);
 		players.push_back(player);
 	}
 

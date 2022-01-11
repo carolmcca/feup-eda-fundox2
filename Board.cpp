@@ -4,19 +4,23 @@
 
 using namespace std;
 
+Board::Board() {
+
+}
+
 Board::Board(const int BOARD_SIZE) {
 	this->size = BOARD_SIZE;
 	for (int i = 0; i < this->size; i++) {
+		this->board.push_back({});
 		for (int j = 0; j < this->size; j++) {
-			this->board[i][j].first = ' ';
-			this->board[i][j].second = nullptr;
+			this->board[i].push_back(pair<char, int>(' ', -1));
 		}
 	}
 }
 
 //-------------------------------------------------------------
 
-vector<vector<pair<char, Player*>>> Board::getBoard() const {
+vector<vector<pair<char, int>>> Board::getBoard() const {
 	return this->board;
 }
 
@@ -32,8 +36,8 @@ void Board::show() const {
 	for (int i = 0; i < this->size; i++) {
 		cout << " " << letters[i] << " " << bgGrey << " ";
 		for (int j = 0; j < this->size; j++) {
-			if (board[i][j].second != nullptr)
-				cout << board[i][j].second->getColor();
+			if (board[i][j].second != -1)
+				cout << colors[board[i][j].second];
 			cout << board[i][j].first << " ";
 		}
 		cout << dfltColor << endl;
@@ -42,8 +46,16 @@ void Board::show() const {
 
 //-------------------------------------------------------------
 
-void Board::setEntry(int row, int col, const std::pair<char, Player*>& entry) {
+void Board::setEntry(int row, int col, const std::pair<char, int>& entry) { //TODO: por a fzr o par aqui dentro da função
 	this->board[row][col] = entry;
 }
 
 //------------------------------------------------------------
+
+pair<char, int> Board::getEntry(int row, int col) const{
+	return this->board[row][col];
+}
+
+int* Board::getEntryPointer(int row, int col) {
+	return &(this->board[row][col].second);
+}

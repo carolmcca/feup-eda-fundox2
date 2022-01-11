@@ -5,6 +5,7 @@
 #include "Turn.h"
 #include "Player.h"
 #include "Bag.h"
+#include <set>
 
 class Game {
 private:
@@ -12,17 +13,15 @@ private:
 	std::vector<Player> players;
 	Rack rack, possibleRack;
 	Board board;
-	Turn turn;
 	std::set<std::string> dictionary;
 	int INITIAL_NUM_PLAYERS, numPlayers;
 	int SCORE_MAX; // TODO const
-	string dictionaryPath;
-	vector<Player**> changePlayer; //vamos mudar isto
+	std::string dictionaryPath;
+	std::vector<int*> changePlayer; //TODO vamos mudar isto
 	bool isFirstWord;
 	int current; 
 	int passTurns, passRounds;
-	vector<Player*> winnerPlayers;
-	bool restoreRack;
+	std::vector<Player*> winnerPlayers;
 public:
 	Game(const Bag& bag, const Board& board, std::vector<Player>& players, int SCORE_MAX, const std::set<std::string>& dictionary);
 
@@ -36,7 +35,7 @@ public:
 	int getINITIALNUMPLAYERS() const;
 	int getNumPlayers() const;
 	int getSCOREMAX() const;
-	/*void setRack();*/ //o coment�rio de baixo aplica-se
+	void fillRack(bool restoreRack); //o coment�rio de baixo aplica-se
 	/*void setPossibleRack();*/ //depende das fun��es set da classe Rack
 	/*void setTurn();*/ //depende das fun��es set da classe Turn
 	void setWinnerPlayers();
@@ -46,10 +45,10 @@ public:
 	void showScores() const;
 	void run();
 
-	vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
-	bool checkWordPlacement(const Turn& turn, const string path, Player& player, vector<Player**>& changePlayer, bool& isConnected);
-	void getHalfLine(int& index, int*& row, int*& col, string& testWord, vector<Player**>& changePlayer, bool changeColor, int step);
-	string getLine(int& index, int*& row, int*& col, const string wordPart, vector<Player**>& changePlayer, bool changeColor);
+	std::vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
+	bool checkWordPlacement(const Turn& turn, const std::string path, Player& player, std::vector<int*>& changePlayer, bool& isConnected);
+	void getHalfLine(int& index, int*& row, int*& col, std::string& testWord, std::vector<int*>& changePlayer, bool changeColor, int step);
+	std::string getLine(int& index, int*& row, int*& col, const std::string wordPart, std::vector<int*>& changePlayer, bool changeColor);
 
 
 

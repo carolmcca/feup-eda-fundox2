@@ -8,9 +8,10 @@ private:
 	std::string color;
 	int score;
 	bool gaveUp;
+	int id;
 
 public:
-	Player(std::string name, std::string color);
+	Player(std::string name, int id);
 	void setName(const std::string& name);
 	void setColor(const std::string& color);
 	void setScore(const int& score);
@@ -20,4 +21,6 @@ public:
 	int getScore() const;
 	bool getGaveUp() const;
 	void incScore();
+	void setId(int id);
+	int getId() const;
 };
