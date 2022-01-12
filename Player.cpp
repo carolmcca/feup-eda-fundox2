@@ -15,43 +15,20 @@ Player::Player(string name, int id) {
 
 //------------------------------------------------------
 
-void Player::resetScore() {
-	this->score = 0;
-}
+void Player::setGaveUp(const bool& gaveUp) { this->gaveUp = gaveUp; }
 
 //------------------------------------------------------
 
-void Player::setGaveUp(const bool& gaveUp) {
-	this->gaveUp = gaveUp;
-}
+string Player::getName() const { return this->name; }
 
-//-------------------------------------------------------
+string Player::getColor() const { return this->color; }
 
-string Player::getName() const {
-	return this->name;
-}
+int Player::getScore() const { return this->score; }
 
-//--------------------------------------------------------
+bool Player::getGaveUp() const { return this->gaveUp; }
 
-string Player::getColor() const {
-	return this->color;
-}
+//------------------------------------------------------
 
-//---------------------------------------------------------
+void Player::resetScore() { this->score = 0; }
 
-int Player::getScore() const {
-	return this->score;
-}
-
-//---------------------------------------------------------
-
-bool Player::getGaveUp() const {
-	return this->gaveUp;
-}
-
-//----------------------------------------------------------
-
-void Player::incScore() {
-	this->score++;
-}
- //---------------------------------------------------------
+void Player::incScore() { this->score++; }

@@ -1,6 +1,5 @@
 #include "Bag.h"
 #include <iostream>
-#include <vector>
 #include <string>
 #include <algorithm>
 #include <utility>
@@ -30,18 +29,17 @@ char Bag::getLastLetter() {
 	return letter;
 }
 
+//----------------------------------------------------------
+
+int Bag::getSize() const {
+	return this->size;
+}
+
 //------------------------------------------------------
 
 void Bag::addLetter(char letter) {
 	this->bag.insert(this->bag.begin() + (rand() % this->bag.size()), letter);
 	this->size++;
-}
-
-
-//----------------------------------------------------------
-
-int Bag::getSize() const { 
-	return this->size;
 }
 
 //----------------------------------------------------------

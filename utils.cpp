@@ -27,17 +27,25 @@ bool isInputValid(const string& inputType, const string errorMessage, const char
 	return false;
 }
 
+//------------------------------------------------------------
+
 bool searchWord(const set<string>& dictionary, string word) {
 	wordToLower(word);
 	return dictionary.find(word) != dictionary.end();
 }
+
+//------------------------------------------------------------
 
 void wordToLower(string &word) {
 	for (int i = 0; i < word.size(); i++)
 		word[i] = tolower(word[i]);
 }
 
+//------------------------------------------------------------
+
 void wordToUpper(string &word) {
 	for (int i = 0; i < word.size(); i++)
 		word[i] = toupper(word[i]);
 }
+
+//------------------------------------------------------------

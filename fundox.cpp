@@ -2,13 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <utility>
+#include <set>
 #include <string>
 #include <random>
 #include <time.h>
-#include <algorithm>
-#include <iomanip>
-#include <set>
 
 using namespace std;
 
@@ -35,6 +32,7 @@ void readConfig(int& scoreMax, string& dictionaryPath, vector<char>& bag) {
 	extractFile.close();
 }
 
+//------------------------------------------------------
 
 void readNumPlayers(int& numPlayers) {
 	while (true) {
@@ -45,6 +43,9 @@ void readNumPlayers(int& numPlayers) {
 		cout << "The number must be an integer between 2 and 4!" << endl;
 	}
 }
+
+//------------------------------------------------------
+
 void readNamePlayer(string& name, const int& index) { 
 	while (true) {
 		cout << colors[index] << "Player " << index + 1 << ": ";
@@ -60,12 +61,14 @@ void readNamePlayer(string& name, const int& index) {
 	}
 }
 
-void setDictionary(set<string>& dictionary, const string& path) {
+//------------------------------------------------------
+
+void setDictionary(set<string>& dictionary, const string& dictionaryPath) {
 	ifstream wordsFile;
-	wordsFile.open(path);
+	wordsFile.open(dictionaryPath);
 
 	if (!wordsFile.is_open()) {
-		cout << "Error! File '" << path << "' not found.\n";
+		cout << "Error! File '" << dictionaryPath << "' not found.\n";
 		exit(1);
 	}
 
@@ -77,9 +80,10 @@ void setDictionary(set<string>& dictionary, const string& path) {
 	wordsFile.close();
 }
 
+//------------------------------------------------------
 
 int main() {
-
+	// Initialize a seed and random generator to use algorithm shuffle() on the construction of the object Bag
 	srand(time(NULL));
 	random_device rd;
 	mt19937 generator(rd());
@@ -97,12 +101,14 @@ int main() {
 
 	string name;
 	vector<Player> players;
+	// Read the names of the players and create a new object Player for each
 	for (int i = 0; i < INITIAL_NUM_PLAYERS; i++) {
 		readNamePlayer(name, i);
 		Player player(name, i);
 		players.push_back(player);
 	}
 
+	// Construct the bag and board of the game and the object game itself
 	Bag bag(bagVector, generator);
 	Board board(BOARD_ROWS, BOARD_COLS);
 	Game game(bag, board, players, SCORE_MAX, dictionary);

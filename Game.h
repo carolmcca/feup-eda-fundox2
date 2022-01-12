@@ -23,18 +23,10 @@ public:
 	Game(const Bag& bag, const Board& board, std::vector<Player>& players, int SCORE_MAX, const std::set<std::string>& dictionary);
 
 	void decreaseNumPlayers();
-	//void setBag(char letter = '0'); //dependendo se est� a p�r ou tirar letras, usa uma ou outra das fun��es da classe Bag
-
-	//se metermos o main todo dentro do game, acho que h� aqui uns qts gets que n�o servem para nada (same para o decreaseNumPlayers)
-	//Rack getRack ();
-	//Board getBoard();
-	//Turn getTurn();
 	int getINITIALNUMPLAYERS() const;
 	int getNumPlayers() const;
 	int getSCOREMAX() const;
-	void fillRack(bool restoreRack); //o coment�rio de baixo aplica-se
-	/*void setPossibleRack();*/ //depende das fun��es set da classe Rack
-	/*void setTurn();*/ //depende das fun��es set da classe Turn
+	void fillRack(bool restoreRack);
 	void setWinnerPlayers();
 	void showWinners();
 
