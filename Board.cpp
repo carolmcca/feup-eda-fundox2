@@ -13,7 +13,7 @@ Board::Board() {
 
 //------------------------------------------------------------
 
-Board::Board(const int BOARD_ROWS, const int BOARD_COLS) {
+void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) { //TODO: deixar assim?
 	this->numRows = BOARD_ROWS;
 	this->numCols = BOARD_COLS;
 	this->board = vector<vector<pair<char, int>>>(this->numRows, vector<pair<char, int>>(this->numCols, pair<char, int> (' ', -1)));

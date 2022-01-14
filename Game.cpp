@@ -1,49 +1,101 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <fstream>
 #include "Game.h"
 
 using namespace std;
 
-Game::Game(const Bag& bag, const Board& board, vector<Player>& players, int SCORE_MAX, const set<string>& dictionary) {
-	this->bag = bag;
-	this->board = board;
-	this->SCORE_MAX = SCORE_MAX;
-	this->INITIAL_NUM_PLAYERS = players.size();
-	this->dictionary = dictionary;
-	this->players = players;
+Game::Game(mt19937 generator) {
+
+	string dictionaryPath;
+	vector<Player> players;
+	
+
+	this->readConfig(dictionaryPath, generator);
+	this->setDictionary(dictionaryPath);
+
+	this->readNumPlayers();
+	this->numPlayers = this->INITIAL_NUM_PLAYERS; //TODO: deixar aqui ou dentro da função?
+	this->readNamePlayers();
+
+	this->board.initBoard(BOARD_ROWS, BOARD_COLS); //TODO: pedir ao utilizador?
 	this->fillRack(true);
-	this->numPlayers = this->INITIAL_NUM_PLAYERS;
 }
 
 //-------------------------------------------------------------
 
-int Game::getINITIALNUMPLAYERS() const
-{
-	return INITIAL_NUM_PLAYERS;
+void Game::readConfig(string& dictionaryPath, mt19937 generator) {
+
+	ifstream extractFile(FILE_CONFIG); //TODO: pôr a pedir ao utilizador
+	if (!extractFile.is_open()) {
+		cout << "File CONFIG.txt not found!" << endl;
+		exit(1);
+	}
+	extractFile.ignore(1000, ':');
+	extractFile >> this->SCORE_MAX;
+	extractFile.ignore(1000, ':');
+	extractFile >> dictionaryPath;
+	extractFile.ignore(1000, ':');
+	char letter;
+	int num_occurences;
+
+	while (extractFile >> letter >> num_occurences)
+		for (int i = 1; i <= num_occurences; i++)
+			this->bag.addEndLetter(letter);
+	this->bag.shuffle(generator);
+
+	extractFile.close();
 }
 
 //-------------------------------------------------------------
 
-int Game::getNumPlayers() const
-{
-	return numPlayers;
+void Game::readNumPlayers() {
+	while (true) {
+		cout << "Please insert the number of players (2-4): ";
+		cin >> this->INITIAL_NUM_PLAYERS;
+		if (isInputValid("cin") && this->INITIAL_NUM_PLAYERS >= 2 && this->INITIAL_NUM_PLAYERS <= 4)
+			return;
+		cout << "The number must be an integer between 2 and 4!" << endl;
+	}
 }
 
 //-------------------------------------------------------------
 
-int Game::getSCOREMAX() const
-{
-	return SCORE_MAX;
+void Game::readNamePlayers() {
+	for (int i = 0; i < this->INITIAL_NUM_PLAYERS; i++) {
+		Player player(i);
+		player.readName();
+		players.push_back(player);
+	}
 }
 
-//-------------------------------------------------------------
+//------------------------------------------------------
+
+void Game::setDictionary(const string& dictionaryPath) {
+	ifstream wordsFile;
+	wordsFile.open(dictionaryPath);
+
+	if (!wordsFile.is_open()) {
+		cout << "Error! File '" << dictionaryPath << "' not found.\n";
+		exit(1);
+	}
+
+	while (!wordsFile.eof()) {
+		string entry;
+		wordsFile >> entry;
+		this->dictionary.insert(entry);
+	}
+	wordsFile.close();
+}
+
+//------------------------------------------------------
 
 void Game::fillRack(bool restoreRack) {
 	if (restoreRack) {
 		while (this->rack.getSize() > 0) {
 			char letter = this->rack.getLastLetter();
-			this->bag.addLetter(letter);
+			this->bag.addRandomLetter(letter);
 		}
 	}
 	while (rack.getSize() < RACK_SIZE && this->bag.getSize() > 0) {
@@ -334,3 +386,4 @@ void Game::showWinners()
 }
 
 //-------------------------------------------------------------
+

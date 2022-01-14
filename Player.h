@@ -16,7 +16,7 @@ public:
 	/**
 	 * @brief Construct a new Player object: set the name and id of the player to the values of the respective parameters
 	 */
-	Player(std::string name, int id);
+	Player(int id);
 
 	void setGaveUp(const bool& gaveUp);
 
@@ -34,4 +34,6 @@ public:
 	 * @brief increases the score by 1
 	 */
 	void incScore();
+
+	std::string readName();
 };

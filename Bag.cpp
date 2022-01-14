@@ -14,10 +14,8 @@ Bag::Bag() {
 
 //-----------------------------------------------------
 
-Bag::Bag(vector<char>& bag, mt19937 generator) {
-	shuffle(bag.begin(), bag.end(), generator);
-	this->bag = bag;
-	this->size = bag.size();
+void Bag::shuffle(mt19937 generator) {
+	std::shuffle(this->bag.begin(), this->bag.end(), generator);
 }
 
 //------------------------------------------------------
@@ -31,15 +29,20 @@ char Bag::getLastLetter() {
 
 //----------------------------------------------------------
 
-int Bag::getSize() const {
-	return this->size;
-}
+int Bag::getSize() const { return this->size; }
 
 //------------------------------------------------------
 
-void Bag::addLetter(char letter) {
+void Bag::addRandomLetter(char letter) {
 	this->bag.insert(this->bag.begin() + (rand() % this->bag.size()), letter);
 	this->size++;
 }
 
-//----------------------------------------------------------
+//-------------------------------------------------------
+
+void Bag::addEndLetter(char letter) {
+	this->bag.push_back(letter);
+	this->size++;
+}
+
+//-------------------------------------------------------

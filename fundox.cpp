@@ -9,109 +9,13 @@
 
 using namespace std;
 
-
-void readConfig(int& scoreMax, string& dictionaryPath, vector<char>& bag) { 
-
-	ifstream extractFile(FILE_CONFIG);
-	if (!extractFile.is_open()) {
-		cout << "File CONFIG.txt not found!" << endl;
-		exit(1);
-	}
-	extractFile.ignore(1000, ':');
-	extractFile >> scoreMax;
-	extractFile.ignore(1000, ':');
-	extractFile >> dictionaryPath;
-	extractFile.ignore(1000, ':');
-	char letter;
-	int num_occurences;
-
-	while (extractFile >> letter >> num_occurences)
-		for (int i = 1; i <= num_occurences; i++)
-			bag.push_back(letter);
-	
-	extractFile.close();
-}
-
-//------------------------------------------------------
-
-void readNumPlayers(int& numPlayers) {
-	while (true) {
-		cout << "Please insert the number of players (2-4): ";
-		cin >> numPlayers;
-		if (isInputValid("cin") && numPlayers >= 2 && numPlayers <= 4)
-			return;
-		cout << "The number must be an integer between 2 and 4!" << endl;
-	}
-}
-
-//------------------------------------------------------
-
-void readNamePlayer(string& name, const int& index) { 
-	while (true) {
-		cout << colors[index] << "Player " << index + 1 << ": ";
-		getline(cin, name);
-		cout << dfltColor;
-		if (isInputValid("getline", "Please insert a valid name\n")) {
-			if (name.size() == 0) {
-				cout << "Your name will be Player" << index + 1 << endl;
-				name = "Player" + to_string(index + 1);
-			}
-			return;
-		}
-	}
-}
-
-//------------------------------------------------------
-
-void setDictionary(set<string>& dictionary, const string& dictionaryPath) {
-	ifstream wordsFile;
-	wordsFile.open(dictionaryPath);
-
-	if (!wordsFile.is_open()) {
-		cout << "Error! File '" << dictionaryPath << "' not found.\n";
-		exit(1);
-	}
-
-	while (!wordsFile.eof()) {
-		string entry;
-		wordsFile >> entry;
-		dictionary.insert(entry);
-	}
-	wordsFile.close();
-}
-
-//------------------------------------------------------
-
 int main() {
 	// Initialize a seed and random generator to use algorithm shuffle() on the construction of the object Bag
 	srand(time(NULL));
 	random_device rd;
 	mt19937 generator(rd());
 
-	int SCORE_MAX;
-	string dictionaryPath;
-	vector<char> bagVector;
-	set<string> dictionary;
-
-	readConfig(SCORE_MAX, dictionaryPath, bagVector);
-	setDictionary(dictionary, dictionaryPath);
-
-	int INITIAL_NUM_PLAYERS;
-	readNumPlayers(INITIAL_NUM_PLAYERS);
-
-	string name;
-	vector<Player> players;
-	// Read the names of the players and create a new object Player for each
-	for (int i = 0; i < INITIAL_NUM_PLAYERS; i++) {
-		readNamePlayer(name, i);
-		Player player(name, i);
-		players.push_back(player);
-	}
-
-	// Construct the bag and board of the game and the object game itself
-	Bag bag(bagVector, generator);
-	Board board(BOARD_ROWS, BOARD_COLS);
-	Game game(bag, board, players, SCORE_MAX, dictionary);
+	Game game(generator); //TODO: faz sentido deixar o generator a passar aqui? Ou deixo só a seed e o gerador é criado no bag?
 	
 	game.run();
 	game.setWinnerPlayers();

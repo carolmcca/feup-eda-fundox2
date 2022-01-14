@@ -16,11 +16,10 @@ public:
 	Board();
 
 	/**
-	 * @brief Construct a new Board object: set each entry of attribute board to a pair of ' ' and -1
+	 * @brief set each entry of attribute board to a pair of ' ' and -1
 	 * set numRows to BOARD_ROWS and numCols to BOARD_COLS
 	 */
-	Board(const int BOARD_ROWS, const int BOARD_COLS);
-
+	void initBoard(const int BOARD_ROWS, const int BOARD_COLS);
 	void setEntry(int row, int col, const std::pair<char, int>& entry);
 
 	int getNumRows() const;

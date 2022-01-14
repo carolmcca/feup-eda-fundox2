@@ -9,9 +9,11 @@ private:
 
 public:
 	Bag();
-	Bag(std::vector<char>& bag, std::mt19937 generator);
+	void shuffle(std::mt19937 generator);
 	char getLastLetter();
-	void addLetter(char letter);
+	void addRandomLetter(char letter); //TODO: change name
+	void addEndLetter(char letter);
 	int getSize() const;
+	void show();
 };
 
