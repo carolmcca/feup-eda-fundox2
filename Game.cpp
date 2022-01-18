@@ -115,12 +115,12 @@ void Game::updateScores() {
 	for (int i = 0; i < players.size(); i++)
 		players[i].resetScore();
 
-	for (int i = 0; i < board.getNumRows(); i++) {
-		for (int j = 0; j < board.getNumCols(); j++) {
+	for (int i = 0; i < board.getNumRows(); i++)
+		for (int j = 0; j < board.getNumCols(); j++)
 			if (board.getId(i, j) != -1)
-				this->players[board.getId(i, j)].incScore(); //TODO: rever para tirar players do vetor
-		}
-	}
+				for (int k = 0; k < numPlayers; k++)
+					if (players[k].getId() == board.getId(i, j))
+						players[k].incScore();
 }
 
 //-------------------------------------------------------------
@@ -129,12 +129,10 @@ void Game::showScores() const {
 	cout << endl << setw(board.getNumCols() - 2) << " ";
 	cout << "SCORE BOARD" << endl;
 
-	int gaveUpSize = std::count_if(players.begin(), players.end(), [](const Player& p) { return p.getGaveUp(); });
+	int gaveUpSize = INITIAL_NUM_PLAYERS - numPlayers;
 	cout << setw(board.getNumCols() - players.size() + gaveUpSize + 1) << " ";
-	for (int i = 0; i < players.size(); i++) {
-		if (!players[i].getGaveUp())
-			cout << players[i].getColor() << setw(3) << players[i].getScore();
-	}
+	for (int i = 0; i < players.size(); i++)
+		cout << players[i].getColor() << setw(3) << players[i].getScore();
 	cout << dfltColor << endl;
 }
 
@@ -288,15 +286,12 @@ string Game::getLine(const int* boardSize, int& index, int*& row, int*& col, con
 //-------------------------------------------------------------
 
 void Game::run() {
+
 	bool isFirstWord = true;
-	int current = this->numPlayers - 1;
+	int current = 0;
 	int passTurns = 0;
 	int passRounds = 0;
 	while (this->players[current].getScore() < this->SCORE_MAX && passRounds < 3 && this->numPlayers > 1) {
-		current = (current + 1) % this->INITIAL_NUM_PLAYERS;
-		if (this->players[current].getGaveUp())
-			continue;
-
 		bool restoreRack = (passRounds > 0 && passTurns == 0);
 		this->fillRack(restoreRack);
 		this->showScores();
@@ -310,11 +305,13 @@ void Game::run() {
 		case PASS:
 			passRounds += (passTurns + 1) / numPlayers;
 			passTurns = (passTurns + 1) % numPlayers;
+			current = (current + 1) % this->numPlayers;
 			continue;
 		case GIVEUP:
-			decreaseNumPlayers();
+			this->numPlayers--;
+			players.erase(players.begin() + current);
 			passRounds += passTurns / numPlayers;
-			players[current].setGaveUp(true);
+			current = current % this->numPlayers;
 			continue;
 		case PLAY:
 			passTurns = 0;
@@ -330,12 +327,13 @@ void Game::run() {
 		if (validPosition && checkWordPlacement(turn, players[current], changePlayer, isConnected) && isConnected) {
 			isFirstWord = false;
 			this->rack.setRack(possibleRack);
-			updateBoard(turn, current);
+			updateBoard(turn, players[current].getId());
 			updateScores();
 		}
 		else {
 			passTurns++;
 		}
+		current = (current + 1) % this->numPlayers;
 	}
 	showScores();
 	this->board.show();
@@ -343,20 +341,17 @@ void Game::run() {
 
 //-------------------------------------------------------------
 
-void Game::setWinnerPlayers()
-{
+void Game::setWinnerPlayers(){
 	int numWinners = 0;
 	int maxScore = -1;
 	for (int i = 0; i < players.size(); i++) {
-		if (!players[i].getGaveUp()) {
-			if (players[i].getScore() > maxScore) {
-				winnerPlayers.clear();
-				winnerPlayers.push_back(&players[i]);
-				maxScore = players[i].getScore();
-			}
-			else if (players[i].getScore() == maxScore) {
-				winnerPlayers.push_back(&players[i]);
-			}
+		if (players[i].getScore() > maxScore) {
+			winnerPlayers.clear();
+			winnerPlayers.push_back(&players[i]);
+			maxScore = players[i].getScore();
+		}
+		else if (players[i].getScore() == maxScore) {
+			winnerPlayers.push_back(&players[i]);
 		}
 	}
 }

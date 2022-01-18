@@ -10,12 +10,7 @@ Player::Player(int id) {
 	this->id = id;
 	this->color = colors[id];
 	this->score = 0;
-	this->gaveUp = false;
 }
-
-//------------------------------------------------------
-
-void Player::setGaveUp(const bool& gaveUp) { this->gaveUp = gaveUp; }
 
 //------------------------------------------------------
 
@@ -25,7 +20,7 @@ string Player::getColor() const { return this->color; }
 
 int Player::getScore() const { return this->score; }
 
-bool Player::getGaveUp() const { return this->gaveUp; }
+int Player::getId() const { return this->id; }
 
 //------------------------------------------------------
 

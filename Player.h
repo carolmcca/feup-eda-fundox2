@@ -8,7 +8,6 @@ private:
 	std::string name; /// name chosen by the player. If the player doesn't choose any name, it's set to PlayerX
 	std::string color; /// player's color (used to show their name and their letters on the board)
 	int score; /// player's score
-	bool gaveUp; /// indicates whether the player has given up
 	int id; /// identifies the player by an int (index on the vector of players -> attribute of class Game)
 
 public:
@@ -18,12 +17,10 @@ public:
 	 */
 	Player(int id);
 
-	void setGaveUp(const bool& gaveUp);
-
 	std::string getName() const;
 	std::string getColor() const;
 	int getScore() const;
-	bool getGaveUp() const;
+	int getId() const;
 
 	/**
 	 * @brief sets the score to 0 
