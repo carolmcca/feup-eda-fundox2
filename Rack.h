@@ -14,5 +14,4 @@ public:
 	char getFirstLetter(); //also eliminates the letter from de rack
 	int getSize() const;
 	void addLetter(char letter);
-	void sort();
 };

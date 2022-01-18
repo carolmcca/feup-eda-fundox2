@@ -5,6 +5,10 @@
 
 using namespace std;
 
+Player::Player() {
+
+}
+
 Player::Player(int id) {
 	this->name = ""; //TODO: faz sentido inicializar como PlayerX e depois mudar se o utilizador meter nome?
 	this->id = id;

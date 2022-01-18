@@ -13,6 +13,7 @@ private:
 
 public:
 
+	Player();
 	/**
 	 * @brief Construct a new Player object: set the name and id of the player to the values of the respective parameters
 	 */

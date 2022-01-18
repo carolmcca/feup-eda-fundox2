@@ -6,11 +6,12 @@
 #include "Bag.h"
 #include "utils.h"
 #include <set>
+#include <map>
 
 class Game {
 private:
 	Bag bag;
-	std::vector<Player> players;
+	std::map<int, Player> players;
 	Rack rack;
 	Board board;
 	std::set<std::string> dictionary;
@@ -28,7 +29,6 @@ public:
 	void setDictionary(const std::string& dictionaryPath);
 
 	void fillRack(bool restoreRack);
-	void decreaseNumPlayers();
 	void updateScores();
 	void updateBoard(const Turn& turn, int playerId);
 	void showScores() const;
