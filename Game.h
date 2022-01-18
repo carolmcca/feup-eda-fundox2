@@ -30,6 +30,7 @@ public:
 	void fillRack(bool restoreRack);
 	void decreaseNumPlayers();
 	void updateScores();
+	void updateBoard(const Turn& turn, int playerId);
 	void showScores() const;
 
 	std::vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);

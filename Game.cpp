@@ -236,10 +236,11 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 	if (testWord.length() > turn.getWord().length())
 		isConnected = true;
 
+	// for each letter of the word
 	for (int i = 0; i < turn.getWord().length(); i++) {
 		perpendicularIndex = initialPerpendicularIndex + i;
 		paralelIndex = initialParalelIndex;
-		changeColor = board.getLetter(*row, *col) == ' ';
+		changeColor = board.getLetter(*row, *col) == ' '; /// true if the position of the board is empty -> we are completing a word
 
 		string letter = { turn.getWordLetter(i) };
 		// get the word formed by the letter i of the played word in its perpendicular direction
@@ -330,16 +331,7 @@ void Game::run() {
 		if (validPosition && checkWordPlacement(turn, players[current], changePlayer, isConnected) && isConnected) {
 			isFirstWord = false;
 			this->rack.setRack(possibleRack);
-			for (int i = 0; i < turn.getWord().length(); i++) {
-				pair<char, int> entry = pair<char, int>(turn.getWordLetter(i), current);
-				if (turn.getIsVertical())
-					board.setEntry(turn.getRow() + i, turn.getCol(), entry);
-				else
-					board.setEntry(turn.getRow(), turn.getCol() + i, entry);
-			}
-			for (int i = 0; i < changePlayer.size(); i++)
-				*changePlayer[i] = current;
-
+			updateBoard(turn, current);
 			updateScores();
 		}
 		else {
@@ -386,4 +378,16 @@ void Game::showWinners()
 }
 
 //-------------------------------------------------------------
+
+void Game::updateBoard(const Turn &turn, int playerId) {
+	for (int i = 0; i < turn.getWord().length(); i++) {
+		pair<char, int> entry = pair<char, int>(turn.getWordLetter(i), playerId);
+		if (turn.getIsVertical())
+			board.setEntry(turn.getRow() + i, turn.getCol(), entry);
+		else
+			board.setEntry(turn.getRow(), turn.getCol() + i, entry);
+	}
+	for (int i = 0; i < changePlayer.size(); i++)
+		*changePlayer[i] = playerId;
+}
 
