@@ -33,7 +33,7 @@ public:
 	void updateBoard(const Turn& turn, int playerId);
 	void showScores() const;
 
-	std::vector<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
+	std::multiset<char> checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected);
 	bool checkWordPlacement(const Turn& turn, Player& player, std::vector<int*>& changePlayer, bool& isConnected);
 	void getHalfLine(const int* boardSize, int& index, int*& row, int*& col, std::string& testWord, std::vector<int*>& changePlayer, bool changeColor, int step);
 	std::string getLine(const int* boardSize, int& index, int*& row, int*& col, const std::string wordPart, std::vector<int*>& changePlayer, bool changeColor);

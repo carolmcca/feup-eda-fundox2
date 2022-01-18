@@ -13,7 +13,7 @@ Board::Board() {
 
 //------------------------------------------------------------
 
-void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) { //TODO: deixar assim?
+void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) {
 	this->numRows = BOARD_ROWS;
 	this->numCols = BOARD_COLS;
 	this->board = vector<vector<pair<char, int>>>(this->numRows, vector<pair<char, int>>(this->numCols, pair<char, int> (' ', -1)));
@@ -28,9 +28,7 @@ void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) { //TODO: deix
 
 //------------------------------------------------------------
 
-void Board::setEntry(int row, int col, const std::pair<char, int>& entry) { //TODO: por a fzr o par aqui dentro da função
-	this->board[row][col] = entry;
-}
+void Board::setEntry(int row, int col, const std::pair<char, int>& entry) { this->board[row][col] = entry; }
 
 //------------------------------------------------------------
 
@@ -57,6 +55,7 @@ void Board::show() const {
 		}
 		cout << dfltColor << endl;
 	}
+	cout << endl;
 }
 
 //------------------------------------------------------------

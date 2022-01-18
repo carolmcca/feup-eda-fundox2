@@ -16,10 +16,9 @@ Game::Game(mt19937 generator) {
 	this->setDictionary(dictionaryPath);
 
 	this->readNumPlayers();
-	this->numPlayers = this->INITIAL_NUM_PLAYERS; //TODO: deixar aqui ou dentro da função?
 	this->readNamePlayers();
 
-	this->board.initBoard(BOARD_ROWS, BOARD_COLS); //TODO: pedir ao utilizador?
+	this->board.initBoard(BOARD_ROWS, BOARD_COLS);
 	this->fillRack(true);
 }
 
@@ -27,7 +26,7 @@ Game::Game(mt19937 generator) {
 
 void Game::readConfig(string& dictionaryPath, mt19937 generator) {
 
-	ifstream extractFile(FILE_CONFIG); //TODO: pôr a pedir ao utilizador
+	ifstream extractFile(FILE_CONFIG);
 	if (!extractFile.is_open()) {
 		cout << "File CONFIG.txt not found!" << endl;
 		exit(1);
@@ -54,8 +53,10 @@ void Game::readNumPlayers() {
 	while (true) {
 		cout << "Please insert the number of players (2-4): ";
 		cin >> this->INITIAL_NUM_PLAYERS;
-		if (isInputValid("cin") && this->INITIAL_NUM_PLAYERS >= 2 && this->INITIAL_NUM_PLAYERS <= 4)
+		if (isInputValid("cin") && this->INITIAL_NUM_PLAYERS >= 2 && this->INITIAL_NUM_PLAYERS <= 4) {
+			this->numPlayers = this->INITIAL_NUM_PLAYERS;
 			return;
+		}
 		cout << "The number must be an integer between 2 and 4!" << endl;
 	}
 }
@@ -94,14 +95,13 @@ void Game::setDictionary(const string& dictionaryPath) {
 void Game::fillRack(bool restoreRack) {
 	if (restoreRack) {
 		while (this->rack.getSize() > 0) {
-			char letter = this->rack.getLastLetter();
+			char letter = this->rack.getFirstLetter();
 			this->bag.addRandomLetter(letter);
 		}
 	}
 	while (rack.getSize() < RACK_SIZE && this->bag.getSize() > 0) {
 		rack.addLetter(this->bag.getLastLetter());
 	}
-	rack.sort();
 }
 
 //-------------------------------------------------------------
@@ -140,8 +140,8 @@ void Game::showScores() const {
 
 //-------------------------------------------------------------
 
-vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected) {
-	vector<char> possibleRack = rack.getRack();
+multiset<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected) {
+	multiset<char> possibleRack = rack.getRack();
 
 	bool spaceExists = false; // dictates whether or not the word is new 
 	int row = turn.getRow();
@@ -159,11 +159,11 @@ vector<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& i
 			// the char to be inserted is different from the one in the board
 			if (board.getLetter(row, col) == ' ') {
 				// the position is free to receive the char
-				vector<char>::iterator pos = find(possibleRack.begin(), possibleRack.end(), turn.getWordLetter(i));
-				if (pos != possibleRack.end()) {
+				multiset<char>::iterator it = possibleRack.find(turn.getWordLetter(i));
+				if (it != possibleRack.end()) {
 					// the char to be inserted is on the rack
 					spaceExists = true;
-					possibleRack.erase(pos);
+					possibleRack.erase(it);
 				}
 				else {
 					// the char isn't on the rack - invalid choice of word
@@ -292,13 +292,12 @@ void Game::run() {
 	int current = this->numPlayers - 1;
 	int passTurns = 0;
 	int passRounds = 0;
-
 	while (this->players[current].getScore() < this->SCORE_MAX && passRounds < 3 && this->numPlayers > 1) {
 		current = (current + 1) % this->INITIAL_NUM_PLAYERS;
 		if (this->players[current].getGaveUp())
 			continue;
 
-		bool restoreRack = (passRounds > 0 && passTurns == 0); //TODO: está a mudar rack quando P P P P G (4 jog)
+		bool restoreRack = (passRounds > 0 && passTurns == 0);
 		this->fillRack(restoreRack);
 		this->showScores();
 		this->board.show();
@@ -327,7 +326,7 @@ void Game::run() {
 
 		bool validPosition = true;
 		bool isConnected = isFirstWord;
-		vector<char> possibleRack = checkExistingLetters(turn, validPosition, isConnected);
+		multiset<char> possibleRack = checkExistingLetters(turn, validPosition, isConnected);
 		if (validPosition && checkWordPlacement(turn, players[current], changePlayer, isConnected) && isConnected) {
 			isFirstWord = false;
 			this->rack.setRack(possibleRack);
@@ -367,10 +366,10 @@ void Game::setWinnerPlayers()
 void Game::showWinners()
 {
 	if (winnerPlayers.size() == 1) {
-		cout << endl << "   " << bgGrey << winnerPlayers[0]->getColor() << "   " << winnerPlayers[0]->getName() << " WON!   " << dfltColor << endl;
+		cout << "   " << bgGrey << winnerPlayers[0]->getColor() << "   " << winnerPlayers[0]->getName() << " WON!   " << dfltColor << endl;
 	}
 	else if (winnerPlayers.size() > 1) {
-		cout << endl << "   " << "It's a tie! Winning players: " << endl;
+		cout << "   " << "It's a tie! Winning players: " << endl;
 		for (int i = 0; i < winnerPlayers.size(); i++) {
 			cout << "   " << bgGrey << winnerPlayers[i]->getColor() << "   " << winnerPlayers[i]->getName() << "   " << dfltColor << endl;
 		}

@@ -15,7 +15,7 @@ int main() {
 	random_device rd;
 	mt19937 generator(rd());
 
-	Game game(generator); //TODO: faz sentido deixar o generator a passar aqui? Ou deixo só a seed e o gerador é criado no bag?
+	Game game(generator);
 	
 	game.run();
 	game.setWinnerPlayers();

@@ -14,6 +14,5 @@ public:
 	void addRandomLetter(char letter); //TODO: change name
 	void addEndLetter(char letter);
 	int getSize() const;
-	void show();
 };
 
