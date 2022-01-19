@@ -11,7 +11,7 @@ public:
 	Bag();
 	void shuffle(std::mt19937 generator);
 	char getLastLetter();
-	void addRandomLetter(char letter); //TODO: change name
+	void randomlyAddLetter(char letter);
 	void addEndLetter(char letter);
 	int getSize() const;
 };
