@@ -11,10 +11,6 @@ private:
 	int id; /// identifies the player by an int (index on the vector of players -> attribute of class Game)
 
 public:
-
-	/**
-	 * @brief Construct a new Player object: set the name and id of the player to the values of the respective parameters
-	 */
 	Player(int id);
 
 	std::string getName() const;
@@ -22,15 +18,8 @@ public:
 	int getScore() const;
 	int getId() const;
 
-	/**
-	 * @brief sets the score to 0 
-	 */
-	void resetScore();
-
-	/**
-	 * @brief increases the score by 1
-	 */
-	void incScore();
-
 	std::string readName();
+
+	void resetScore();
+	void incScore();
 };

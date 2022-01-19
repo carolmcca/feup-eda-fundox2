@@ -5,6 +5,9 @@ using namespace std;
 
 //------------------------------------------------------------
 
+/**
+* @brief Construct a new Board object: set board to empty and numRows and numCols to 0
+*/
 Board::Board() {
 	this->board = {};
 	this->numRows = 0;
@@ -13,6 +16,10 @@ Board::Board() {
 
 //------------------------------------------------------------
 
+/**
+* @brief set each entry of attribute board to a pair of ' ' and -1
+*		 set numRows to BOARD_ROWS and numCols to BOARD_COLS
+*/
 void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) {
 	this->numRows = BOARD_ROWS;
 	this->numCols = BOARD_COLS;
@@ -44,6 +51,9 @@ int* Board::getIdPointer(int row, int col) {return &(this->board[row][col].secon
 
 //------------------------------------------------------------
 
+/**
+* @brief displays the game board
+*/
 void Board::show() const {
 	cout << endl << "    " << this->colMarker << endl;
 	for (int i = 0; i < this->numRows; i++) {

@@ -5,9 +5,12 @@
 
 using namespace std;
 
+/**
+* @brief Construct a new Player object: set the name and id of the player to the values of the respective parameters
+*/
 Player::Player(int id) {
 	this->name = ""; //TODO: faz sentido inicializar como PlayerX e depois mudar se o utilizador meter nome?
-	this->id = id;
+	this->id = id; //TODO: atribuir id automaticamente? - teriamos que ter um atributo static numPlayers ou assim
 	this->color = colors[id];
 	this->score = 0;
 }
@@ -24,12 +27,11 @@ int Player::getId() const { return this->id; }
 
 //------------------------------------------------------
 
-void Player::resetScore() { this->score = 0; }
-
-void Player::incScore() { this->score++; }
-
-//------------------------------------------------------
-
+/**
+* @brief Read a string (name) from the keyboard
+* 
+* @return string with the name chosen by the player
+*/
 string Player::readName() {
 	while (true) {
 		cout << colors[this->id] << "Player " << this->id + 1 << ": ";
@@ -44,3 +46,15 @@ string Player::readName() {
 		}
 	}
 }
+
+/**
+* @brief Set the score to 0
+*/
+void Player::resetScore() { this->score = 0; }
+
+/**
+* @brief Increase the atribute score by 1
+*/
+void Player::incScore() { this->score++; }
+
+//------------------------------------------------------

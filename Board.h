@@ -10,15 +10,8 @@ private:
 	std::string colMarker; /// string with the letters that represent each column (to be shown on top of the board)
 
 public:
-	/**
-	 * @brief Construct a new Board object: set board to empty and numRows and numCols to 0
-	 */
 	Board();
 
-	/**
-	 * @brief set each entry of attribute board to a pair of ' ' and -1
-	 * set numRows to BOARD_ROWS and numCols to BOARD_COLS
-	 */
 	void initBoard(const int BOARD_ROWS, const int BOARD_COLS);
 	void setEntry(int row, int col, const std::pair<char, int>& entry);
 
@@ -28,9 +21,6 @@ public:
 	int getId(int row, int col) const;
 	int* getIdPointer(int row, int col);
 
-	/**
-	* @brief displays the game board
-	*/
 	void show() const;
 	
 };
