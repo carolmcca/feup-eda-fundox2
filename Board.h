@@ -22,5 +22,4 @@ public:
 	int* getIdPointer(int row, int col);
 
 	void show() const;
-	
 };

@@ -3,10 +3,9 @@
 
 using namespace std;
 
-//------------------------------------------------------------
 
 /**
-* @brief Construct a new Board object: set board to empty and numRows and numCols to 0
+* @brief construct a new Board object - set board to empty and numRows and numCols to 0
 */
 Board::Board() {
 	this->board = {};
@@ -14,7 +13,7 @@ Board::Board() {
 	this->numCols = 0;
 }
 
-//------------------------------------------------------------
+//================================================================
 
 /**
 * @brief set each entry of attribute board to a pair of ' ' and -1
@@ -33,11 +32,11 @@ void Board::initBoard(const int BOARD_ROWS, const int BOARD_COLS) {
 	}
 }
 
-//------------------------------------------------------------
+//================================================================
 
 void Board::setEntry(int row, int col, const std::pair<char, int>& entry) { this->board[row][col] = entry; }
 
-//------------------------------------------------------------
+//================================================================
 
 int	Board::getNumRows() const {return this->numRows;}
 
@@ -49,10 +48,10 @@ int	Board::getId(int row, int col) const {return this->board[row][col].second;}
 
 int* Board::getIdPointer(int row, int col) {return &(this->board[row][col].second);}
 
-//------------------------------------------------------------
+//================================================================
 
 /**
-* @brief displays the game board
+* @brief display the game board
 */
 void Board::show() const {
 	cout << endl << "    " << this->colMarker << endl;
@@ -67,5 +66,3 @@ void Board::show() const {
 	}
 	cout << endl;
 }
-
-//------------------------------------------------------------

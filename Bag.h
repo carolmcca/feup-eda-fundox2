@@ -4,17 +4,16 @@
 
 class Bag {
 private:
-	std::vector<char> bag;
-	int size;
+	std::vector<char> bag; /// game bag: a vector with the letters still available to play
+	int size; /// bag's size
 
 public:
 	Bag();
 
 	int getSize() const;
+	char getLastLetter();
 
 	void shuffle(std::mt19937 generator);
-	char getLastLetter(); //TODO: juntar à getSize()? Não sei até que ponto faz sentido porque não é uma get "normal"
-	void randomlyAddLetter(char letter);
 	void addEndLetter(char letter);
+	void randomlyAddLetter(char letter);
 };
-

@@ -7,10 +7,10 @@
 using namespace std;
 
 /**
-* @brief constructs the game - reads and saves all the game's configurations
-*				reads the number of players and their names from the keybord
-*				initializes the board
-*				creates the first rack to be used in the game
+* @brief construct the game - read and save all the game's configurations
+*							- read the number of players and their names from the keyboard
+*							- initialize the board
+*							- create the first rack to be used in the game
 */
 Game::Game(mt19937 generator) {
 
@@ -28,18 +28,18 @@ Game::Game(mt19937 generator) {
 	this->fillRack(true);
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
-* @brief reads and saves all the game's configurations
-*				uses the number of occurences of each letter in the game to create the bag
-*				shuffles the bag
+* @brief read and save all the game's configurations
+*		 create the bag based on the number of occurences of each letter defined on the FILE_CONFIG 
+*		 shuffle the bag
 */
 void Game::readConfig(string& dictionaryPath, mt19937 generator) {
 
 	ifstream extractFile(FILE_CONFIG);
 	if (!extractFile.is_open()) {
-		cout << "File CONFIG.txt not found!" << endl;
+		cout << "File " << FILE_CONFIG << " not found!" << endl;
 		exit(1);
 	}
 	extractFile.ignore(1000, ':');
@@ -58,10 +58,10 @@ void Game::readConfig(string& dictionaryPath, mt19937 generator) {
 	extractFile.close();
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
-* @brief reads the number of players from the keyboard, repeating endlessly until the input is valid
+* @brief read the number of players from the keyboard, repeating endlessly until the input is valid
 */
 void Game::readNumPlayers() {
 	while (true) {
@@ -75,10 +75,10 @@ void Game::readNumPlayers() {
 	}
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
-* @brief reads the name of the players from the keyboard, repeating endlessly until the input is valid
+* @brief read the name of the players from the keyboard, repeating endlessly until the input is valid
 *		 (default name: PlayerX, being X the number of the player)
 */
 void Game::readNamePlayers() {
@@ -89,10 +89,10 @@ void Game::readNamePlayers() {
 	}
 }
 
-//------------------------------------------------------
+//================================================================
 
 /**
-* @brief defines the used dictionary - extracts the list of valid words to a set
+* @brief define the used dictionary - extract the list of valid words to a set
 */
 void Game::setDictionary(const string& dictionaryPath) {
 	ifstream wordsFile;
@@ -111,11 +111,11 @@ void Game::setDictionary(const string& dictionaryPath) {
 	wordsFile.close();
 }
 
-//------------------------------------------------------
+//================================================================
 
 /**
-* @brief defines the rack - empties the rack to the bag if the rack needs to be restored
-*				extracts letters from the bag until the rack has 7 letters and orders them alphabeticaly
+* @brief define the rack - empty the rack to the bag if the rack needs to be restored
+*		 extract letters from the bag until the rack has 7 letters
 */
 void Game::fillRack(bool restoreRack) {
 	if (restoreRack) {
@@ -129,19 +129,11 @@ void Game::fillRack(bool restoreRack) {
 	}
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
-* @brief decreases the number of players
-*/
-void Game::decreaseNumPlayers() {
-	this->numPlayers--;
-}
-//-------------------------------------------------------------
-
-/**
-* @brief updates the scores - resets all players' scores
-*				searches throught the boardand, when it finds a letter, adds one point to the score of the player associated with that letter
+* @brief update the scores - resets all players' scores
+*		 search throught the board and, when a letter is found, add one point to the score of the corresponding player
 */
 void Game::updateScores() {
 	for (int i = 0; i < players.size(); i++)
@@ -155,10 +147,10 @@ void Game::updateScores() {
 						players[k].incScore();
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief displays the players' scores
+ * @brief display the players' scores
  */
 void Game::showScores() const {
 	cout << endl << setw(board.getNumCols() - 2) << " ";
@@ -171,14 +163,32 @@ void Game::showScores() const {
 	cout << dfltColor << endl;
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
-* @brief checks if the word uses letters of another word and if each letter can be placed in the indicated position, that is if the word:
-*               doesn't get out of the board limits
-*			    doesn't overlap inconsistently with another one
-*				isn't already written in the specified position
-*			    is writable with the available letters
+* @brief update the board - add the letters of the played word to the board in the correct position
+*		 assign each letter stolen from another player to the current player
+*/
+void Game::updateBoard(const Turn& turn, int playerId) {
+	for (int i = 0; i < turn.getWord().length(); i++) {
+		pair<char, int> entry = pair<char, int>(turn.getWordLetter(i), playerId);
+		if (turn.getIsVertical())
+			board.setEntry(turn.getRow() + i, turn.getCol(), entry);
+		else
+			board.setEntry(turn.getRow(), turn.getCol() + i, entry);
+	}
+	for (int i = 0; i < changePlayer.size(); i++)
+		*changePlayer[i] = playerId;
+}
+
+//================================================================
+
+/**
+* @brief check if the word uses letters of another word and if each letter can be placed in the indicated position, that is, if the word:
+*               - doesn't get out of the board limits
+*			    - doesn't overlap inconsistently with another one
+*				- isn't already written in the specified position
+*			    - is writable with the available letters
 * @return rack without the letters that can be inserted on the board
 */
 multiset<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool& isConnected) {
@@ -189,9 +199,9 @@ multiset<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool&
 	int col = turn.getCol();
 
 	for (int i = 0; i < turn.getWord().size(); i++) {
-		// the cicle is broken if the word get's out of the board, overlaps with another word or there aren't enough letters to write it
+		// the cicle is broken if the word gets out of the board, overlaps with another word or there aren't enough letters to write it
 		if (row == this->board.getNumRows() || col == this->board.getNumCols()) {
-			// the word get's out of the board limits
+			// the word gets out of the board limits
 			cout << "Your word doesn't fit on the board. You lost your turn.\n";
 			validPosition = false;
 			break;
@@ -228,16 +238,16 @@ multiset<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool&
 			row++;
 		else
 			col++;
-	}
+	} 
 	validPosition = (validPosition && spaceExists);
 	return possibleRack;
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief checks the word formed in the same direction and all the words formed in the perpendicular direction to the played word
- *				 checks whether or not the word continues through another on the board (isConnected)
+ * @brief check the word formed in the same direction and all the words formed in the perpendicular direction to the played word
+ *		  check whether or not the word continues through another on the board (isConnected)
  * @return true if all the formed words are on the dictionary and false otherwise
  */
 bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& changePlayer, bool& isConnected) {
@@ -258,7 +268,7 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 		initialParalelIndex = turn.getCol();
 		row = &perpendicularIndex;
 		col = &paralelIndex;
-		parallelBoardSize = &BOARD_COLS; //TODO: chamge this
+		parallelBoardSize = &BOARD_COLS;
 		perpendicularBoardSize = &BOARD_ROWS;
 	}
 	else {
@@ -266,7 +276,7 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 		initialPerpendicularIndex = turn.getCol();
 		row = &paralelIndex;
 		col = &perpendicularIndex;
-		parallelBoardSize = &BOARD_ROWS; //TODO: chamge this
+		parallelBoardSize = &BOARD_ROWS;
 		perpendicularBoardSize = &BOARD_COLS;
 	}
 
@@ -286,7 +296,7 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 	for (int i = 0; i < turn.getWord().length(); i++) {
 		perpendicularIndex = initialPerpendicularIndex + i;
 		paralelIndex = initialParalelIndex;
-		changeColor = board.getLetter(*row, *col) == ' '; /// true if the position of the board is empty -> we are completing a word
+		changeColor = board.getLetter(*row, *col) == ' '; // true if the position of the board is empty - we are completing a word
 
 		string letter = { turn.getWordLetter(i) };
 		// get the word formed by the letter i of the played word in its perpendicular direction
@@ -304,10 +314,10 @@ bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& ch
 	return true;
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief appends to testWord the neighbor chars of (row, col) in the direction indicated by step (-1 to the left, +1 to the right)
+ * @brief append to testWord the neighbor chars of (row, col) in the direction indicated by step (-1 to the left, +1 to the right)
  */
 void Game::getHalfLine(const int* boardSize, int& index, int*& row, int*& col, string& testWord, vector<int*>& changePlayer, bool changeColor, int step) {
 	while (index >= 0 && index < *boardSize && board.getLetter(*row, *col) != ' ') {
@@ -318,12 +328,12 @@ void Game::getHalfLine(const int* boardSize, int& index, int*& row, int*& col, s
 	}
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief creates a string (testWord) containing the word formed with the placement of the new char in (*row *col)
- *			  the analisys direction is indirectly defined through the parameter index (indicates the direction through which the board is iterated)
- * 			  i.e. if the prependicularIndex is passed, the direction of testWord will be the same of played word
+ * @brief create a string (testWord) containing the word formed with the placement of the new char in (*row *col)
+ *		  the analisys direction is indirectly defined through the parameter index (indicates the direction through which the board is iterated)
+ * 		  i.e. if the prependicularIndex is passed, the direction of testWord will be the same of the played word
  * @return string testWord
  */
 string Game::getLine(const int* boardSize, int& index, int*& row, int*& col, const string wordPart, vector<int*>& changePlayer, bool changeColor) {
@@ -340,18 +350,18 @@ string Game::getLine(const int* boardSize, int& index, int*& row, int*& col, con
 	return testWord;
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief runs the game
- *				asks the current player for their move, analising if it is valid:
+ * @brief run the game
+ *				ask the current player for their move, analising if it is valid:
  *						- if it is, updates the rack, the bag, the board and the score table
  *						- if it isn't, asks the user to try again or considers that they passed, depending on the failed validity condition
- *				in order to know when to end the game (end of the while cycle) keeps track of:
+ *				in order to know when to end the game (end of the while cycle) keep track of:
  *						- the score table
- *						- the number of consecutive rounds where everyone passed
+ *						- the number of consecutive rounds that everyone passed
  *						- the number of players who are still playing
- *				shows the score table and the final board when the game ends
+ *				show the score table and the final board when the game ends
  */
 void Game::run() {
 
@@ -407,10 +417,10 @@ void Game::run() {
 	this->board.show();
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief determines who won the game, comparing the remaining players' scores
+ * @brief determine who won the game, comparing the remaining players' scores
  */
 void Game::setWinnerPlayers() {
 	int numWinners = 0;
@@ -427,11 +437,11 @@ void Game::setWinnerPlayers() {
 	}
 }
 
-//-------------------------------------------------------------
+//================================================================
 
 /**
- * @brief displays the winner's name (or winners' names)
- *				each name is presented with the color of the respective winner
+ * @brief display the winner's name (or winners' names)
+ *		  each name is presented with the color of the respective winner
  */
 void Game::showWinners()
 {
@@ -445,22 +455,3 @@ void Game::showWinners()
 		}
 	}
 }
-
-//-------------------------------------------------------------
-
-/**
-*@brief updates the board - adds the letters of the played word the board in the correct position
-* assignes each letter stolen from another player to the current player
-*/
-void Game::updateBoard(const Turn& turn, int playerId) {
-	for (int i = 0; i < turn.getWord().length(); i++) {
-		pair<char, int> entry = pair<char, int>(turn.getWordLetter(i), playerId);
-		if (turn.getIsVertical())
-			board.setEntry(turn.getRow() + i, turn.getCol(), entry);
-		else
-			board.setEntry(turn.getRow(), turn.getCol() + i, entry);
-	}
-	for (int i = 0; i < changePlayer.size(); i++)
-		*changePlayer[i] = playerId;
-}
-

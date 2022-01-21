@@ -10,7 +10,7 @@
 using namespace std;
 
 int main() {
-	// Initialize a seed and random generator to use algorithm shuffle() on the construction of the object Bag
+	// initialize a seed and random generator to use algorithm shuffle() on the construction of the object bag
 	srand(time(NULL));
 	random_device rd;
 	mt19937 generator(rd());

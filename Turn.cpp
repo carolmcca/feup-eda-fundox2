@@ -4,8 +4,20 @@
 
 using namespace std;
 
+/**
+* @brief default constructor
+*/
+Turn::Turn() { }
+
+//-------------------------------------------------------------
+
+/**
+	* @brief read the played word from the keyboard, until reaching the maximum number of attempts
+	* @return an enum type referent to the nature of the input (pass, give up or play)
+	*/
 TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
-	cout << message << endl;
+	cout << message << endl; // message: "PlayerX's turn"
+
 	int attempts = 0;
 	string word;
 	while (attempts < NUM_MAX_ATTEMPTS) {
@@ -40,32 +52,16 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 
 //------------------------------------------------------------------------------------------------
 
-void Turn::readDirection() {
-	char direction;
-	while (true) {
-		cout << "Direction (H / V) : ";
-		cin >> direction;
-		direction = toupper(direction);
-		if (isInputValid("cin")) {
-			if (direction == 'V') {
-				this->isVertical = true;
-				return;
-			}
-			else if (direction == 'H') {
-				this->isVertical = false;
-				return;
-			}
-		}
-		cout << "The input must be H/h for horizontal or V/v for vertical!\n";
-	}
-}
+/**
+* @brief read the position of the played word (ROW column) from the keyboard, repeating endlessly until the input is valid
+*/
 void Turn::readPosition() {
 	char sep;
 	string line;
 	while (true) {
 		cout << "Position of 1st letter (ROW column): ";
 		getline(cin, line);
-		if (isInputValid("getline") && line.size() == 3) {
+		if (isInputValid("getline") && line.size() == 3) {  // check if the input is in the correct format
 			if (line[1] == ' ') {
 				this->row = int(line[0] - 'A');
 				this->col = int(line[2] - 'a');
@@ -80,27 +76,46 @@ void Turn::readPosition() {
 	}
 }
 
+/**
+* @brief read the direction of the word (H / V) from the keyboard, repeating endlessly until the input is valid
+*/
+void Turn::readDirection() {
+	char direction;
+	while (true) {
+		cout << "Direction (H / V) : ";
+		cin >> direction;
+		direction = toupper(direction);
 
-Turn::Turn() {
-	
+		if (isInputValid("cin")) {
+			if (direction == 'V') {
+				this->isVertical = true;
+				return;
+			}
+			else if (direction == 'H') {
+				this->isVertical = false;
+				return;
+			}
+		}
+		cout << "The input must be H/h for horizontal or V/v for vertical!\n";
+	}
 }
 
-char Turn::getWordLetter(int i) const {
-	return this->word[i];
-}
+//-------------------------------------------------------------
 
-string Turn::getWord() const {
-	return this->word;
-}
+string Turn::getWord() const { return this->word; }
 
-int Turn::getRow() const {
-	return row;
-}
+int Turn::getRow() const { return row; }
 
-int Turn::getCol() const {
-	return col;
-}
+int Turn::getCol() const { return col; }
 
-bool Turn::getIsVertical() const {
-	return isVertical;
-}
+bool Turn::getIsVertical() const { return isVertical; }
+
+//-------------------------------------------------------------
+
+/**
+* @brief get the letter i from the string word
+* @return char with the required letter
+*/
+char Turn::getWordLetter(int i) const { return this->word[i]; }
+
+

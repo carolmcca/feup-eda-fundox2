@@ -9,10 +9,11 @@ private:
 public:
 	Rack();
 	void setRack(std::multiset<char> possibleRack);
+
 	std::multiset<char> getRack() const;
-	void show(int BOARD_SIZE) const;
-	char getFirstLetter(); //also eliminates the letter from de rack
 	int getSize() const;
+	char getFirstLetter();
+
 	void addLetter(char letter);
-	void sort();
+	void show(int BOARD_SIZE) const;
 };

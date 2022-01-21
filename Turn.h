@@ -13,7 +13,9 @@ typedef enum {
 } TurnPlay;
 
 
-
+/**
+ * @brief saves the chosen word, position and direction on each turn
+ */
 class Turn {
 private:
 	std::string word;
@@ -22,13 +24,13 @@ private:
 	bool isVertical;
 public:
 	Turn();
+	TurnPlay readWord(const std::string& message, const std::set<std::string>& dictionary);
+	void readPosition();
+	void readDirection();
+
 	std::string getWord() const;
 	int getRow() const;
 	int getCol() const;
 	bool getIsVertical() const;
 	char getWordLetter(int i) const;
-	TurnPlay readWord(const std::string& message, const std::set<std::string>& dictionary);
-	void readDirection();
-	void readPosition();
 };
-
