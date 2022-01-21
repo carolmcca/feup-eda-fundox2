@@ -18,10 +18,10 @@ typedef enum {
  */
 class Turn {
 private:
-	std::string word;
-	int row;
-	int col;
-	bool isVertical;
+	std::string word; /// word played
+	int row; /// word's first letter's row
+	int col; /// word's first letter's col
+	bool isVertical; /// indicates if the word is played in the vertical (true) or horizontal (false) direction
 public:
 	Turn();
 	TurnPlay readWord(const std::string& message, const std::set<std::string>& dictionary);

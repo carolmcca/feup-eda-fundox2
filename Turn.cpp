@@ -9,7 +9,7 @@ using namespace std;
 */
 Turn::Turn() { }
 
-//-------------------------------------------------------------
+//===========================================================
 
 /**
 	* @brief read the played word from the keyboard, until reaching the maximum number of attempts
@@ -50,7 +50,7 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 	return PASS;
 }
 
-//------------------------------------------------------------------------------------------------
+//=======================================================================
 
 /**
 * @brief read the position of the played word (ROW column) from the keyboard, repeating endlessly until the input is valid
@@ -76,6 +76,8 @@ void Turn::readPosition(const int BOARD_ROWS, const int BOARD_COLS) {
 	}
 }
 
+//=======================================================================
+
 /**
 * @brief read the direction of the word (H / V) from the keyboard, repeating endlessly until the input is valid
 */
@@ -100,7 +102,7 @@ void Turn::readDirection() {
 	}
 }
 
-//-------------------------------------------------------------
+//========================================================
 
 string Turn::getWord() const { return this->word; }
 
@@ -110,7 +112,7 @@ int Turn::getCol() const { return col; }
 
 bool Turn::getIsVertical() const { return isVertical; }
 
-//-------------------------------------------------------------
+//========================================================
 
 /**
 * @brief get the letter i from the string word

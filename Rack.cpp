@@ -13,7 +13,7 @@ Rack::Rack() {
 	this->size = 0;
 }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief define the rack after a player's turn (possibleRack is created in class Game)
@@ -23,13 +23,19 @@ void Rack::setRack(multiset<char> possibleRack) {
 	this->size = possibleRack.size();
 }
 
-//------------------------------------------------------
+//========================================================
+
+void Rack::setMaxSize(int maxSize) { this->maxSize = maxSize; }
+
+//========================================================
 
 multiset<char> Rack::getRack() const { return this->rack; }
 
 int Rack::getSize() const { return this->size; }
 
-//------------------------------------------------------
+int Rack::getMaxSize() const { return this->maxSize; }
+
+//========================================================
 
 /**
 * @brief remove the first letter from the rack, changing its size accordingly
@@ -42,7 +48,7 @@ char Rack::getFirstLetter() {
 	return letter;
 }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief add a new letter to the rack, changing its size accordingly
@@ -52,7 +58,7 @@ void Rack::addLetter(char letter) {
 	this->size++;
 }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief display the rack

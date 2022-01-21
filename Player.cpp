@@ -15,7 +15,7 @@ Player::Player(int id) {
 	this->score = 0;
 }
 
-//------------------------------------------------------
+//========================================================
 
 string Player::getName() const { return this->name; }
 
@@ -25,7 +25,7 @@ int Player::getScore() const { return this->score; }
 
 int Player::getId() const { return this->id; }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief read the player's name from the keyboard
@@ -46,14 +46,14 @@ string Player::readName() {
 	}
 }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief set the score to 0
 */
 void Player::resetScore() { this->score = 0; }
 
-//------------------------------------------------------
+//========================================================
 
 /**
 * @brief increase the score by 1

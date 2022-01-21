@@ -1,0 +1,32 @@
+WINNER POINTS: 30
+NUMBER OF ROWS: 15
+NUMBER OF COLUMNS: 15
+SIZE OF THE RACK: 10
+VALID WORDS: WORDS_EN.txt
+LETTERS:
+A  10
+B  4
+C  4
+D  5
+E  12
+F  3
+G  3
+H  3
+I  10
+J  2
+K  2
+L  4
+M  3
+N  7
+O  9
+P  3
+Q  1
+R  7
+S  5
+T  6
+U  5
+V  2
+W  2
+X  2
+Y  3
+Z  1

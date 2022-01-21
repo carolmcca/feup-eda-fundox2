@@ -23,9 +23,6 @@ Game::Game(mt19937 generator) {
 
 	this->readNumPlayers();
 	this->readNamePlayers();
-
-	this->board.initBoard(this->BOARD_ROWS, this->BOARD_COLS);
-	this->fillRack(true);
 }
 
 //================================================================
@@ -39,27 +36,34 @@ void Game::readConfig(string& dictionaryPath, mt19937 generator) {
 	cout << "Choose the number of the configuration file (1-3): ";
 	string configFileNum;
 	cin >> configFileNum;
-	string configFile = "CONFIG" + configFileNum + ".txt";
+	string configFile = "CONFIG_" + configFileNum + ".txt";
 
 	ifstream extractFile(configFile);
 	if (!extractFile.is_open()) {
 		cout << "File " << configFile << " not found!" << endl;
 		exit(1);
 	}
+	int boardRows, boardCols, rackSize;
+
 	extractFile.ignore(1000, ':');
 	extractFile >> this->SCORE_MAX;
 	extractFile.ignore(1000, ':');
-	extractFile >> this->BOARD_ROWS;
+	extractFile >> boardRows;
 	extractFile.ignore(1000, ':');
-	extractFile >> this->BOARD_COLS; //TODO: deixar estes atributos ou criar aqui um board vazio já com este tamanho?
+	extractFile >> boardCols;
 	extractFile.ignore(1000, ':');
-	extractFile >> this->RACK_SIZE; // same com a rack
+	extractFile >> rackSize;
 	extractFile.ignore(1000, ':');
 	extractFile >> dictionaryPath;
 	extractFile.ignore(1000, ':');
 	char letter;
 	int num_occurences;
 
+	this->board.initBoard(boardRows, boardCols);
+	this->rack.setMaxSize(rackSize);
+	this->fillRack(true);
+
+	// fill the bag with letters extraxted from configFile
 	while (extractFile >> letter >> num_occurences)
 		for (int i = 1; i <= num_occurences; i++)
 			this->bag.addEndLetter(letter);
@@ -125,7 +129,7 @@ void Game::setDictionary(const string& dictionaryPath) {
 
 /**
 * @brief define the rack - empty the rack to the bag if the rack needs to be restored
-*		 extract letters from the bag until the rack has 7 letters
+*		 extract letters from the bag until the rack has RACK_SIZE letters
 */
 void Game::fillRack(bool restoreRack) {
 	if (restoreRack) {
@@ -134,7 +138,7 @@ void Game::fillRack(bool restoreRack) {
 			this->bag.randomlyAddLetter(letter);
 		}
 	}
-	while (rack.getSize() < RACK_SIZE && this->bag.getSize() > 0) {
+	while (rack.getSize() < rack.getMaxSize() && this->bag.getSize() > 0) {
 		rack.addLetter(this->bag.getLastLetter());
 	}
 }
@@ -262,15 +266,19 @@ multiset<char> Game::checkExistingLetters(Turn& turn, bool& validPosition, bool&
  */
 bool Game::checkWordPlacement(const Turn& turn, Player& player, vector<int*>& changePlayer, bool& isConnected) {
 	changePlayer.clear();
+
 	string testWord;
 	bool changeColor;
 	int perpendicularIndex, paralelIndex;
 	int initialParalelIndex, initialPerpendicularIndex;
-	const int* parallelBoardSize;
-	const int* perpendicularBoardSize;
+	int BOARD_COLS = this->board.getNumCols();
+	int BOARD_ROWS = this->board.getNumRows();
+
 	int* row;
 	int* col;
-
+	const int* parallelBoardSize;
+	const int* perpendicularBoardSize;
+	
 	// initialize Indexes -> col is considered parallel to vertical and perpendicular to horizontal
 	//                    -> row is considered perpendicular to vertical and parallel to horizontal
 	if (turn.getIsVertical()) {
@@ -406,7 +414,7 @@ void Game::run() {
 			passRounds = 0;
 		}
 
-		turn.readPosition(this->BOARD_ROWS, this->BOARD_COLS);
+		turn.readPosition(this->board.getNumRows(), this->board.getNumCols());
 		turn.readDirection();
 
 		bool validPosition = true;
