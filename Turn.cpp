@@ -55,7 +55,7 @@ TurnPlay Turn::readWord(const string& message, const set<string>& dictionary) {
 /**
 * @brief read the position of the played word (ROW column) from the keyboard, repeating endlessly until the input is valid
 */
-void Turn::readPosition() {
+void Turn::readPosition(const int BOARD_ROWS, const int BOARD_COLS) {
 	char sep;
 	string line;
 	while (true) {

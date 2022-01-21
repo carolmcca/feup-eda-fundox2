@@ -17,6 +17,9 @@ private:
 	int INITIAL_NUM_PLAYERS; /// initial number of players
 	int numPlayers; /// current number of players
 	int SCORE_MAX; /// score to win the game (defined on FILE_CONFIG)
+	int BOARD_ROWS;
+	int BOARD_COLS;
+	int RACK_SIZE;
 	std::vector<int*> changePlayer;  /// vector with pointers to the ids of the board entries stolen by the player 
 	std::vector<Player*> winnerPlayers; /// vector with pointers to the winners
 	

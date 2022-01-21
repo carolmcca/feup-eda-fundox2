@@ -24,7 +24,7 @@ Game::Game(mt19937 generator) {
 	this->readNumPlayers();
 	this->readNamePlayers();
 
-	this->board.initBoard(BOARD_ROWS, BOARD_COLS);
+	this->board.initBoard(this->BOARD_ROWS, this->BOARD_COLS);
 	this->fillRack(true);
 }
 
@@ -36,14 +36,24 @@ Game::Game(mt19937 generator) {
 *		 shuffle the bag
 */
 void Game::readConfig(string& dictionaryPath, mt19937 generator) {
+	cout << "Choose the number of the configuration file (1-3): ";
+	string configFileNum;
+	cin >> configFileNum;
+	string configFile = "CONFIG" + configFileNum + ".txt";
 
-	ifstream extractFile(FILE_CONFIG);
+	ifstream extractFile(configFile);
 	if (!extractFile.is_open()) {
-		cout << "File " << FILE_CONFIG << " not found!" << endl;
+		cout << "File " << configFile << " not found!" << endl;
 		exit(1);
 	}
 	extractFile.ignore(1000, ':');
 	extractFile >> this->SCORE_MAX;
+	extractFile.ignore(1000, ':');
+	extractFile >> this->BOARD_ROWS;
+	extractFile.ignore(1000, ':');
+	extractFile >> this->BOARD_COLS; //TODO: deixar estes atributos ou criar aqui um board vazio já com este tamanho?
+	extractFile.ignore(1000, ':');
+	extractFile >> this->RACK_SIZE; // same com a rack
 	extractFile.ignore(1000, ':');
 	extractFile >> dictionaryPath;
 	extractFile.ignore(1000, ':');
@@ -396,7 +406,7 @@ void Game::run() {
 			passRounds = 0;
 		}
 
-		turn.readPosition();
+		turn.readPosition(this->BOARD_ROWS, this->BOARD_COLS);
 		turn.readDirection();
 
 		bool validPosition = true;

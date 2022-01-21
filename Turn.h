@@ -25,7 +25,7 @@ private:
 public:
 	Turn();
 	TurnPlay readWord(const std::string& message, const std::set<std::string>& dictionary);
-	void readPosition();
+	void readPosition(const int BOARD_ROWS, const int BOARD_COLS);
 	void readDirection();
 
 	std::string getWord() const;

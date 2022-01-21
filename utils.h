@@ -14,10 +14,6 @@ const std::string black = "\033[30m";
 const std::vector<std::string> colors = { red, blue, green, magenta };
 
 const int NUM_MAX_ATTEMPTS = 3; /// maximum number of times that a player can insert a word that isn't on the dictionary
-const int BOARD_ROWS = 10; /// number of board rows
-const int BOARD_COLS = 15; /// number of board columns
-const int RACK_SIZE = 7; /// maximum size of the rack
-const std::string FILE_CONFIG = "CONFIG.txt"; /// name of the text file containing configuration parameters
 
 bool searchWord(const std::set<std::string>& dictionary, std::string word);
 
