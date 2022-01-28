@@ -44,7 +44,7 @@ void Bag::shuffle(mt19937 generator) {
 //================================================================
 
 /**
-* @brief adds a new letter to the end of the bag, changing its size accordingly
+* @brief add a new letter to the end of the bag, changing its size accordingly
 */
 void Bag::addEndLetter(char letter) {
 	this->bag.push_back(letter);
@@ -54,7 +54,7 @@ void Bag::addEndLetter(char letter) {
 //================================================================
 
 /**
-* @brief add a new letter to the bag in a random position, allowing the bag to remain shuffled
+* @brief add a new letter to the bag in a random position, allowing it to remain shuffled
 *		 change the bag's size accordingly
 */
 void Bag::randomlyAddLetter(char letter) {

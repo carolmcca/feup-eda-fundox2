@@ -3,7 +3,6 @@
 
 using namespace std;
 
-
 /**
 * @brief construct a new Board object - set board to empty and numRows and numCols to 0
 */

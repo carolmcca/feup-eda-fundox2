@@ -29,11 +29,13 @@ Game::Game(mt19937 generator) {
 
 /**
 * @brief read and save all the game's configurations
-*		 create the bag based on the number of occurences of each letter defined on the FILE_CONFIG 
+*		 create the bag based on the number of occurences of each letter defined on the configFile
 *		 shuffle the bag
+*		 create the rack based on its predefined size (configFile)
 */
 void Game::readConfig(string& dictionaryPath, mt19937 generator) {
-	cout << "Choose the number of the configuration file (1-3): ";
+	cout << "Choose the duration of the game (this will influence the configurations):" << endl;
+	cout << "0 - Standard; 1 - Short; 2 - Intermediate; 3 - Long" << endl;
 	string configFileNum;
 	cin >> configFileNum;
 	string configFile = "CONFIG_" + configFileNum + ".txt";
@@ -129,7 +131,7 @@ void Game::setDictionary(const string& dictionaryPath) {
 
 /**
 * @brief define the rack - empty the rack to the bag if the rack needs to be restored
-*		 extract letters from the bag until the rack has RACK_SIZE letters
+*		 extract letters from the bag until the rack has rackSize letters
 */
 void Game::fillRack(bool restoreRack) {
 	if (restoreRack) {
@@ -146,7 +148,7 @@ void Game::fillRack(bool restoreRack) {
 //================================================================
 
 /**
-* @brief update the scores - resets all players' scores
+* @brief update the scores - reset all players' scores
 *		 search throught the board and, when a letter is found, add one point to the score of the corresponding player
 */
 void Game::updateScores() {
@@ -387,7 +389,7 @@ void Game::run() {
 	int current = 0;
 	int passTurns = 0;
 	int passRounds = 0;
-	while (this->players[current].getScore() < this->SCORE_MAX && passRounds < 3 && this->numPlayers > 1) {
+	while (this->players[(current-1+numPlayers) % numPlayers].getScore() < this->SCORE_MAX && passRounds < 3 && this->numPlayers > 1) {
 		bool restoreRack = (passRounds > 0 && passTurns == 0);
 		this->fillRack(restoreRack);
 		this->showScores();

@@ -16,7 +16,7 @@ private:
 	std::set<std::string> dictionary; /// set with the valid words
 	int INITIAL_NUM_PLAYERS; /// initial number of players
 	int numPlayers; /// current number of players
-	int SCORE_MAX; /// score to win the game (defined on FILE_CONFIG)
+	int SCORE_MAX; /// score to win the game
 	std::vector<int*> changePlayer;  /// vector with pointers to the ids of the board entries stolen by the player 
 	std::vector<Player*> winnerPlayers; /// vector with pointers to the winners
 	
